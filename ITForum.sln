@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITForum", "ITForum\ITForum.csproj", "{F7B533AD-ED14-41D1-8429-503F6CB9468A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum", "ITForum\ITForum.csproj", "{F7B533AD-ED14-41D1-8429-503F6CB9468A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{81115A08-FC87-458D-A581-9489E194FA64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITForum.Domain", "ITForum.Domain\ITForum.Domain.csproj", "{2981703C-F515-4809-A2F6-636E25C84480}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{F7B533AD-ED14-41D1-8429-503F6CB9468A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B533AD-ED14-41D1-8429-503F6CB9468A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B533AD-ED14-41D1-8429-503F6CB9468A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2981703C-F515-4809-A2F6-636E25C84480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2981703C-F515-4809-A2F6-636E25C84480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2981703C-F515-4809-A2F6-636E25C84480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2981703C-F515-4809-A2F6-636E25C84480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2981703C-F515-4809-A2F6-636E25C84480} = {81115A08-FC87-458D-A581-9489E194FA64}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {878B0363-0EEC-4830-8672-708F2C77E702}
