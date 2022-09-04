@@ -8,8 +8,8 @@ namespace ITForum.Domain.Topic
 {
     internal class Comment
     {
-        public int Id { get; set; }
-        public int AuthorID { get; set; }
+        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public string Content { get; set; }
         public Topic? Topic { get; set; }
         public Comment? Comm { get; set; }
