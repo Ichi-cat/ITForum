@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum", "ITForum\ITForum.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{81115A08-FC87-458D-A581-9489E194FA64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITForum.Domain", "ITForum.Domain\ITForum.Domain.csproj", "{2981703C-F515-4809-A2F6-636E25C84480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum.Domain", "ITForum.Domain\ITForum.Domain.csproj", "{2981703C-F515-4809-A2F6-636E25C84480}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BLL", "BLL", "{9EA206D6-257C-4FCA-ADFE-19B625AA2E30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITForum.Application", "ITForum.Application\ITForum.Application.csproj", "{80ECB96A-95AD-4997-A713-E9A21DE7EC55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +27,17 @@ Global
 		{2981703C-F515-4809-A2F6-636E25C84480}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2981703C-F515-4809-A2F6-636E25C84480}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2981703C-F515-4809-A2F6-636E25C84480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80ECB96A-95AD-4997-A713-E9A21DE7EC55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80ECB96A-95AD-4997-A713-E9A21DE7EC55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80ECB96A-95AD-4997-A713-E9A21DE7EC55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80ECB96A-95AD-4997-A713-E9A21DE7EC55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2981703C-F515-4809-A2F6-636E25C84480} = {81115A08-FC87-458D-A581-9489E194FA64}
+		{80ECB96A-95AD-4997-A713-E9A21DE7EC55} = {9EA206D6-257C-4FCA-ADFE-19B625AA2E30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {878B0363-0EEC-4830-8672-708F2C77E702}

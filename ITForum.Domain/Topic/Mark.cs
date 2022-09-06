@@ -1,12 +1,12 @@
 ﻿namespace ITForum.Domain.Topic
 {
-    internal class Mark
+    public class Mark
     {
         public Guid Id { get; set; }
         public MarkType Type { get; set; }
         public Guid UserId { get; set; }
     }
-    enum MarkType
+    public enum MarkType
     {
         LIKE,
         DISLIKE
