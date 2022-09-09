@@ -1,10 +1,11 @@
 using ITForum.Application;
-using Microsoft.AspNetCore.Builder;
+using ITForum.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplication();
+builder.Services.AddPersistence();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
