@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ITForum.Domain.Topic;
+using ITForum.Domain.TopicItems;
+using ITForum.Application.Interfaces;
 
 namespace ITForum.Persistance
 {
-    public class ITForumDbContext:DbContext
+    public class ITForumDbContext:DbContext, IItForumDbContext
     {
-        DbSet<Attachment> Attachments { get; set; }
-        DbSet<Comment> Comments { get; set; }
-        DbSet<Mark> Marks { get; set; }
-        DbSet<Topic> Topic { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Mark> Marks { get; set; }
+        public DbSet<Topic> Topics { get; set; }
         public ITForumDbContext(DbContextOptions<ITForumDbContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

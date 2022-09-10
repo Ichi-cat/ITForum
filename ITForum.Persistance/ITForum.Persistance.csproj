@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ITForum.Application\ITForum.Application.csproj" />
     <ProjectReference Include="..\ITForum.Domain\ITForum.Domain.csproj" />
   </ItemGroup>
 
