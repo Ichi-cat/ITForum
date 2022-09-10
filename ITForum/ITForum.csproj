@@ -12,7 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ITForum.Application\ITForum.Application.csproj" />
     <ProjectReference Include="..\ITForum.Domain\ITForum.Domain.csproj" />
-    <ProjectReference Include="..\ITForum.Persistence\ITForum.Persistence.csproj" />
+    <ProjectReference Include="..\ITForum.Persistance\ITForum.Persistance.csproj" />
   </ItemGroup>
 
 </Project>
