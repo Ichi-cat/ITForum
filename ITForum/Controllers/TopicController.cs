@@ -1,5 +1,7 @@
-﻿using ITForum.Application.Topic.Comands.GetTopicListCommand;
-using ITForum.Domain.Topic;
+﻿using ITForum.Application.Topics.Comands.CreateTopicCommand;
+using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
+using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
+using ITForum.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Controllers
@@ -7,15 +9,23 @@ namespace ITForum.Controllers
     public class TopicController : BaseController
     {
         [HttpGet("{id}")]
-        public ActionResult GetTopicDetailsById(Guid id)
+        public async Task<ActionResult> GetTopicDetailsById(Guid id)
         {
-            return Ok(new { id = id });
+            var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { UserId = UserId, Id = id});
+            return Ok(topic);
         }
         [HttpGet]
-        public ActionResult GetTopicList(int? count=10)
+        public async  Task<ActionResult> GetTopicList(int? count=10)
         {
-            Mediator.Send(new GetTopicListCommand { UserId = Guid.Empty });
-            return Ok(new List<Topic> { new Topic { Name="Ivan"}, new Topic { Name="Mihail" }, new Topic { Name = count.ToString() } });
+            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = Guid.Empty });
+            return Ok(topics);
         }
+        [HttpPost]
+        public async Task<ActionResult> CreateTopic(CreateTopicModel model)
+        {
+            var id = await Mediator.Send(new CreateTopicCommand { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
+            return Ok(id);
+        }
+
     }
 }

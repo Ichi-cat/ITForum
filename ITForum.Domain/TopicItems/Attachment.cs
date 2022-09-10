@@ -1,4 +1,4 @@
-﻿namespace ITForum.Domain.Topic
+﻿namespace ITForum.Domain.TopicItems
 {
     public class Attachment
     {

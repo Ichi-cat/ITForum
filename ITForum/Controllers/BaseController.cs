@@ -9,5 +9,6 @@ namespace ITForum.Controllers
     {
         private IMediator _mediator;
         protected IMediator Mediator { get => _mediator ??= HttpContext.RequestServices.GetService<IMediator>(); }
+        protected Guid UserId { get; } = Guid.Empty;
     }
 }
