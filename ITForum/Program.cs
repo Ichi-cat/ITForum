@@ -1,12 +1,20 @@
 using ITForum.Application;
-using Microsoft.AspNetCore.Builder;
+using ITForum.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//TODO:NEED REFACTORING
+IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 builder.Services.AddApplication();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddPersistance(configuration);
 
 var app = builder.Build();
 
