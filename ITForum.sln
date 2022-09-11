@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum", "ITForum\ITForum.csproj", "{F7B533AD-ED14-41D1-8429-503F6CB9468A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum.Api", "ITForum\ITForum.Api.csproj", "{F7B533AD-ED14-41D1-8429-503F6CB9468A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{81115A08-FC87-458D-A581-9489E194FA64}"
 EndProject
@@ -47,7 +47,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2981703C-F515-4809-A2F6-636E25C84480} = {81115A08-FC87-458D-A581-9489E194FA64}
 		{80ECB96A-95AD-4997-A713-E9A21DE7EC55} = {9EA206D6-257C-4FCA-ADFE-19B625AA2E30}
-		{E5814523-B0C3-4795-925F-A92D7DFF5239} = {E86EB9E9-D228-4559-8BB0-5717B192FC54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {878B0363-0EEC-4830-8672-708F2C77E702}

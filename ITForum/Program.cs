@@ -1,5 +1,8 @@
+using AutoMapper;
 using ITForum.Application;
+using ITForum.Application.Common.Mappings;
 using ITForum.Persistance;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,12 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 builder.Services.AddApplication();
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile(new GetAssemblyMapsProfile(Assembly.GetExecutingAssembly()));
+});
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddPersistance(configuration);
