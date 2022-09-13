@@ -1,5 +1,4 @@
-﻿using ITForum.Api;
-using ITForum.Application.Topics.Comands.CreateTopicCommand;
+﻿using ITForum.Application.Topics.Comands.CreateTopicCommand;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
@@ -24,8 +23,6 @@ namespace ITForum.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateTopic(CreateTopicModel model)
         {
-            var x = Mapper.Map<TestMapping>(new TestMappingSource { Id = 3, Name = "Stas", Name2 = "Err"});
-
             var id = await Mediator.Send(new CreateTopicCommand { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
             return Ok(id);
         }

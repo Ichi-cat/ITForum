@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace ITForum.Application.Common.Mappings
@@ -14,8 +13,9 @@ namespace ITForum.Application.Common.Mappings
 
             types.ForEach(type =>
             {
-                var instance = Activator.CreateInstance(type);
-                type.GetMethod("Mapping").Invoke(instance, new[] {this} );
+                dynamic instance = Activator.CreateInstance(type);
+                instance.Mapping(this);
+                //type.GetMethod("Mapping").Invoke(instance, new[] {this} );
             });
         }
     }
