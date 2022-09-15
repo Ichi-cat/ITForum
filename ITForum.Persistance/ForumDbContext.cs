@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ITForum.Domain.TopicItems;
 using ITForum.Application.Interfaces;
-
+    
 namespace ITForum.Persistance
 {
     public class ITForumDbContext:DbContext, IItForumDbContext
