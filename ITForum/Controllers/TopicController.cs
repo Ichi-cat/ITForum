@@ -1,4 +1,4 @@
-﻿using ITForum.Application.Topics.Comands.CreateTopicCommand;
+﻿using ITForum.Application.Topics.Comands.CreateTopic;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
