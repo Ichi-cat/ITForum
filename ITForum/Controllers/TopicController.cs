@@ -27,9 +27,5 @@ namespace ITForum.Controllers
             var id = await Mediator.Send(new CreateTopicCommand { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
-        public IActionResult Delete()
-        {
-            return ViewColumn();
-        }
     }
 }
