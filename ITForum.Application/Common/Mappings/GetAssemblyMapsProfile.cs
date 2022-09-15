@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using System.Reflection;
 
 namespace ITForum.Application.Common.Mappings

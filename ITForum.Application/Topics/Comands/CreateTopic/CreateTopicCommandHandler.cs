@@ -2,8 +2,11 @@
 using ITForum.Domain.TopicItems;
 using MediatR;
 
-namespace ITForum.Application.Topics.Comands.CreateTopicCommand
+namespace ITForum.Application.Topics.Comands.CreateTopic
 {
+    /// <summary>
+    /// Логика создания топика
+    /// </summary>
     public class CreateTopicCommandHandler : IRequestHandler<CreateTopicCommand, Guid>
     {
         private readonly IItForumDbContext _context;

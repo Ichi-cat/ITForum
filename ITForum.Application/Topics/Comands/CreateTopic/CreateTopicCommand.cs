@@ -1,8 +1,11 @@
 ﻿using ITForum.Domain.TopicItems;
 using MediatR;
 
-namespace ITForum.Application.Topics.Comands.CreateTopicCommand
+namespace ITForum.Application.Topics.Comands.CreateTopic
 {
+    /// <summary>
+    /// Класс содержит информацию о том что необходимо для создания топика
+    /// </summary>
     public class CreateTopicCommand : IRequest<Guid>
     {
         public Guid UserId { get; set; }
