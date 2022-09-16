@@ -6,9 +6,9 @@ namespace ITForum.Application.Topics.Comands.CreateTopicCommand
 {
     public class CreateTopicCommandHandler : IRequestHandler<CreateTopicCommand, Guid>
     {
-        private readonly IItForumDbContext _context;
+        private readonly IITForumDbContext _context;
 
-        public CreateTopicCommandHandler(IItForumDbContext context)
+        public CreateTopicCommandHandler(IITForumDbContext context)
         {
             _context = context;
         }

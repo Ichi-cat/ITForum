@@ -9,9 +9,9 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery
 {
     public class GetTopicDetailsByIdQueryHandler : IRequestHandler<GetTopicDetailsByIdQuery, TopicDetailsVm>
     {
-        private readonly IItForumDbContext _context;
+        private readonly IITForumDbContext _context;
         private readonly IMapper _mapper;
-        public GetTopicDetailsByIdQueryHandler(IItForumDbContext context, IMapper mapper)
+        public GetTopicDetailsByIdQueryHandler(IITForumDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -5,7 +5,7 @@ using ITForum.Domain.TopicItems;
 namespace ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery
 {
     //It's a class describing object to return for user
-    public class TopicDetailsVm : IMap
+    public class TopicDetailsVm : IMap<Topic>
     {
         public string Name { get; set; }
         public string Content { get; set; }

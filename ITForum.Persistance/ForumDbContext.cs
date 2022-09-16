@@ -4,7 +4,7 @@ using ITForum.Application.Interfaces;
 
 namespace ITForum.Persistance
 {
-    public class ITForumDbContext:DbContext, IItForumDbContext
+    public class ITForumDbContext:DbContext, IITForumDbContext
     {
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
