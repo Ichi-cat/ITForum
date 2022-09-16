@@ -9,5 +9,6 @@
         public List<Attachment> Attachments { get; set; }
         public List<Comment> Comment { get; set; }
         public DateTime Created { get; set; }
+        public DateTime EditDate { get; set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using ITForum.Application.Topics.Comands.CreateTopicCommand;
+﻿using ITForum.Application.Topics.Comands.CreateTopic;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ITForum.Controllers
 {
@@ -26,6 +27,5 @@ namespace ITForum.Controllers
             var id = await Mediator.Send(new CreateTopicCommand { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
-
     }
 }

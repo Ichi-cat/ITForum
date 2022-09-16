@@ -19,7 +19,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery
         public async Task<TopicDetailsVm> Handle(GetTopicDetailsByIdQuery request, CancellationToken cancellationToken)
         {
             Topic topic = await _context.Topics.FirstOrDefaultAsync(topic => topic.Id == request.Id);
-            if (topic == null) throw new NotFoundException();
+            if (topic == null) throw new NotFoundException(nameof(Topic), request.Id);
             return _mapper.Map<TopicDetailsVm>(topic);
         }
     }
