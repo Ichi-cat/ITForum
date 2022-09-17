@@ -4,13 +4,13 @@ using ITForum.Application.Interfaces;
     
 namespace ITForum.Persistance
 {
-    public class ITForumDbContext:DbContext, IITForumDbContext
+    public class ItForumDbContext:DbContext, IItForumDbContext
     {
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Mark> Marks { get; set; }
         public DbSet<Topic> Topics { get; set; }
-        public ITForumDbContext(DbContextOptions<ITForumDbContext> options) : base(options)
+        public ItForumDbContext(DbContextOptions<ItForumDbContext> options) : base(options)
         {
             Database.EnsureCreated();
         }

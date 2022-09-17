@@ -10,7 +10,7 @@ namespace ITForum.Persistance
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration configuration)
         {
             var connectingString = configuration["DbConnection"];
-            services.AddDbContext<IITForumDbContext, ITForumDbContext>(options =>
+            services.AddDbContext<IItForumDbContext, ItForumDbContext>(options =>
             {
                 options.UseSqlServer(connectingString);
             });

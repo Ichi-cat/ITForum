@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Interfaces
 {
-    public interface IITForumDbContext
+    public interface IItForumDbContext
     {
         DbSet<Attachment> Attachments { get; set; }
         DbSet<Comment> Comments { get; set; }

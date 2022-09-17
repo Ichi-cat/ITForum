@@ -6,8 +6,8 @@ namespace ITForum.Application.Topics.Queries.GetMyTopicListCommand
 {
     public class GetMyTopicListQueryHandler : IRequestHandler<GetMyTopicListQuery, TopicListVm>
     {
-        private readonly IITForumDbContext _context;
-        public GetMyTopicListQueryHandler(IITForumDbContext context)
+        private readonly IItForumDbContext _context;
+        public GetMyTopicListQueryHandler(IItForumDbContext context)
         {
             _context = context;
         }

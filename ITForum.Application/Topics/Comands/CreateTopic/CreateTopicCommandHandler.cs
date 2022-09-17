@@ -10,9 +10,9 @@ namespace ITForum.Application.Topics.Comands.CreateTopic
     /// </summary>
     public class CreateTopicCommandHandler : IRequestHandler<CreateTopicCommand, Guid>
     {
-        private readonly IITForumDbContext _context;
+        private readonly IItForumDbContext _context;
 
-        public CreateTopicCommandHandler(IITForumDbContext context)
+        public CreateTopicCommandHandler(IItForumDbContext context)
         {
             _context = context;
         }

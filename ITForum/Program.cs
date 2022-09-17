@@ -20,7 +20,7 @@ builder.Services.AddApplication();
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new GetAssemblyMapsProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new GetAssemblyMapsProfile(typeof(IITForumDbContext).Assembly));
+    config.AddProfile(new GetAssemblyMapsProfile(typeof(IItForumDbContext).Assembly));
 });
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();

@@ -8,10 +8,10 @@ namespace ITForum.Application.Topics.Queries.GetTopicListQuery
 {
     internal class GetTopicListQueryHandler : IRequestHandler<GetTopicListQuery, TopicListVM>
     {
-        private readonly IITForumDbContext _dbContext;
+        private readonly IItForumDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetTopicListQueryHandler(IITForumDbContext dbContext,
+        public GetTopicListQueryHandler(IItForumDbContext dbContext,
             IMapper mapper) =>
             (_dbContext, _mapper) = (dbContext, mapper);
         public async Task<TopicListVM> Handle(GetTopicListQuery request, CancellationToken cancellationToken)
