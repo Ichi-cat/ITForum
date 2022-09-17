@@ -17,7 +17,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicListQuery
         public async Task<TopicListVM> Handle(GetTopicListQuery request, CancellationToken cancellationToken)
         {
             var topicQuery = await _dbContext.Topics
-                .Where(note => note.Id == request.TopicId)
+                .Skip(request.Start).Take(request.Tail)
                 .ProjectTo<TopicVM>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             return new TopicListVM { Topics = topicQuery };
