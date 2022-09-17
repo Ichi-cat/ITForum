@@ -1,6 +1,7 @@
 using AutoMapper;
 using ITForum.Application;
 using ITForum.Application.Common.Mappings;
+using ITForum.Application.Interfaces;
 using ITForum.Persistance;
 using System.Reflection;
 
@@ -19,7 +20,7 @@ builder.Services.AddApplication();
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new GetAssemblyMapsProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new GetAssemblyMapsProfile(typeof(IMap).Assembly));
+    config.AddProfile(new GetAssemblyMapsProfile(typeof(IITForumDbContext).Assembly));
 });
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
