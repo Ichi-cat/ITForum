@@ -3,7 +3,7 @@ using ITForum.Application.Interfaces;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Domain.TopicItems;
 
-namespace ITForum.Application.Topics.Comands.DeleteTopic
+namespace ITForum.Application.Topics.Commands.DeleteTopic
 {
     internal class DeleteTopicCommandHandler
         : IRequestHandler<DeleteTopicCommand>

@@ -3,7 +3,7 @@ using ITForum.Domain.TopicItems;
 using MediatR;
 
 
-namespace ITForum.Application.Topics.Comands.CreateTopic
+namespace ITForum.Application.Topics.Commands.CreateTopic
 {
     /// <summary>
     /// Логика создания топика
@@ -18,10 +18,12 @@ namespace ITForum.Application.Topics.Comands.CreateTopic
         }
         public async Task<Guid> Handle(CreateTopicCommand request, CancellationToken cancellationToken)
         {
-            var topic = new Topic { Name = request.Name, 
-                                    Content = request.Content,
-                                    Attachments = request.Attachments,
-                                    Id = Guid.NewGuid()
+            var topic = new Topic
+            {
+                Name = request.Name,
+                Content = request.Content,
+                Attachments = request.Attachments,
+                Id = Guid.NewGuid()
             };
             await _context.Topics.AddAsync(topic);
             await _context.SaveChangesAsync();

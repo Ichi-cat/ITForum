@@ -1,4 +1,3 @@
-using AutoMapper;
 using ITForum.Application;
 using ITForum.Application.Common.Mappings;
 using ITForum.Application.Interfaces;

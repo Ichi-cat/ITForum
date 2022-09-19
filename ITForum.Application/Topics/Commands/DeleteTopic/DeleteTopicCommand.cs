@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace ITForum.Application.Topics.Comands.DeleteTopic
+namespace ITForum.Application.Topics.Commands.DeleteTopic
 {
     /// <summary>
     /// Класс содержит информацию о том что необходимо чтобы удалить топик

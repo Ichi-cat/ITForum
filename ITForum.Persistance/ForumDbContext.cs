@@ -12,6 +12,7 @@ namespace ITForum.Persistance
         public DbSet<Topic> Topics { get; set; }
         public ItForumDbContext(DbContextOptions<ItForumDbContext> options) : base(options)
         {
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

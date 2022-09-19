@@ -4,7 +4,7 @@ using ITForum.Application.Interfaces;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Domain.TopicItems;
 
-namespace ITForum.Application.Topics.Comands.UpdateTopic
+namespace ITForum.Application.Topics.Commands.UpdateTopic
 {
     /// <summary>
     /// Логика обновления топика

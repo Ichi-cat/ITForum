@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITForum.Application.Topics.Comands.CreateTopic
+namespace ITForum.Application.Topics.Commands.CreateTopic
 {
     /// <summary>
     /// Класс содержит информацию о том что необходимо для создания топика

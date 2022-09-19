@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using ITForum.Domain.TopicItems;
 
-namespace ITForum.Application.Topics.Comands.UpdateTopic
+namespace ITForum.Application.Topics.Commands.UpdateTopic
 {
     /// <summary>
     /// Класс содержит информацию о том что необходимо для обновления топика

@@ -1,9 +1,8 @@
-﻿using ITForum.Application.Topics.Comands.CreateTopic;
+﻿using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ITForum.Controllers
 {
