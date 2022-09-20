@@ -1,4 +1,6 @@
 ﻿using ITForum.Application.Interfaces;
+using ITForum.Persistance.TempEntities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,21 @@ namespace ITForum.Persistance
             {
                 options.UseSqlServer(connectingString);
             });
+
+            services.AddIdentity<ItForumUser, ItForumRole>(options =>
+            {
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredLength = 6,
+                    RequiredUniqueChars = 1,
+                    RequireLowercase = false,
+                    RequireNonAlphanumeric = false,
+                    RequireUppercase = true
+                };
+            })
+                .AddEntityFrameworkStores<ItForumDbContext>()
+                .AddDefaultTokenProviders();
             
             return services;
         }

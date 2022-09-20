@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace ITForum.Controllers
 {
@@ -12,6 +14,7 @@ namespace ITForum.Controllers
         protected IMediator Mediator { get => _mediator ??= HttpContext.RequestServices.GetService<IMediator>(); }
         private IMapper _mapper;
         protected IMapper Mapper { get => _mapper ??= HttpContext.RequestServices.GetService<IMapper>(); }
-        protected Guid UserId { get; } = Guid.Empty;
+        protected Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.FindFirst(JwtRegisteredClaimNames.Sub).Value)
+            : Guid.Empty;
     }
 }
