@@ -3,6 +3,7 @@ using ITForum.Application.Common.Mappings;
 using ITForum.Application.Interfaces;
 using ITForum.Persistance;
 using System.Reflection;
+using ITForum.Application.Topics.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddPersistance(configuration);
+builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
 
 var app = builder.Build();
 
