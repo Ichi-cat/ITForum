@@ -23,7 +23,8 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
                 Name = request.Name,
                 Content = request.Content,
                 Attachments = request.Attachments,
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                UserId = request.UserId
             };
             await _context.Topics.AddAsync(topic);
             await _context.SaveChangesAsync();

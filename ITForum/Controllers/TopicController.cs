@@ -1,10 +1,13 @@
-﻿using ITForum.Api.Models;
+using ITForum.Api.Models;
 using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Commands.DeleteTopic;
 using ITForum.Application.Topics.Commands.UpdateTopic;
+using ITForum.Api.Controllers;
+using ITForum.Api.Models.Auth;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Controllers
@@ -20,7 +23,7 @@ namespace ITForum.Controllers
         [HttpGet]
         public async Task<ActionResult> GetTopicList(int? count = 10)
         {
-            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = Guid.Empty });
+            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
             return Ok(topics);
         }
         [HttpPost]
@@ -28,6 +31,7 @@ namespace ITForum.Controllers
         {
             var id = await Mediator.Send(new CreateTopicCommand
             { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
+            var id = await Mediator.Send(new CreateTopicCommand { UserId = UserId, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
         [HttpPut]
