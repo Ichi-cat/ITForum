@@ -41,7 +41,21 @@ namespace ITForum.Api.Controllers
             if(!await _userManager.CheckPasswordAsync(user, model.Password))
                 //create error
                 throw new Exception("Password is not right");
-            var token = JwtTokenGenerator(user.UserName, user.Email, user.Id.ToString());
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+            };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var token = JwtTokenGenerator(claims);
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -79,7 +93,21 @@ namespace ITForum.Api.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
-            var token = JwtTokenGenerator(user.UserName, user.Email, user.Id.ToString());
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+            };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach(var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var token = JwtTokenGenerator(claims);
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -87,13 +115,8 @@ namespace ITForum.Api.Controllers
             });
         }
         [NonAction]
-        private JwtSecurityToken JwtTokenGenerator(string userName, string email, string id)
+        private JwtSecurityToken JwtTokenGenerator(IEnumerable<Claim> claims)
         {
-            var claims = new List<Claim> {
-                new Claim(JwtRegisteredClaimNames.Name, userName),
-                new Claim(JwtRegisteredClaimNames.Email, email),
-                new Claim(JwtRegisteredClaimNames.Sub, id)
-            };
             var jwt = new JwtSecurityToken(
                     issuer: _configuration["AuthOptions:Issuer"],
                     audience: _configuration["AuthOptions:Audience"],
@@ -106,10 +129,5 @@ namespace ITForum.Api.Controllers
 
             return jwt;
         }
-    }
-    public static class UserRoles
-    {
-        public const string Admin = "Admin";
-        public const string User = "User";
     }
 }

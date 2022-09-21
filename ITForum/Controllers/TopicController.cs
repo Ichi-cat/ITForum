@@ -1,7 +1,10 @@
-﻿using ITForum.Application.Topics.Commands.CreateTopic;
+﻿using ITForum.Api.Controllers;
+using ITForum.Api.Models.Auth;
+using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Controllers
