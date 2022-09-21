@@ -1,7 +1,10 @@
-﻿using ITForum.Application.Topics.Commands.CreateTopic;
+﻿using ITForum.Api.Controllers;
+using ITForum.Api.Models.Auth;
+using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Controllers
@@ -17,13 +20,13 @@ namespace ITForum.Controllers
         [HttpGet]
         public async  Task<ActionResult> GetTopicList(int? count=10)
         {
-            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = Guid.Empty });
+            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
             return Ok(topics);
         }
         [HttpPost]
         public async Task<ActionResult> CreateTopic(CreateTopicModel model)
         {
-            var id = await Mediator.Send(new CreateTopicCommand { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
+            var id = await Mediator.Send(new CreateTopicCommand { UserId = UserId, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
     }

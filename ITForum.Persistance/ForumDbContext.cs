@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ITForum.Domain.TopicItems;
 using ITForum.Application.Interfaces;
-    
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using ITForum.Persistance.TempEntities;
+
 namespace ITForum.Persistance
 {
-    public class ItForumDbContext:DbContext, IItForumDbContext
+    public class ItForumDbContext: IdentityDbContext<ItForumUser, ItForumRole, Guid>, IItForumDbContext
     {
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -12,7 +15,6 @@ namespace ITForum.Persistance
         public DbSet<Topic> Topics { get; set; }
         public ItForumDbContext(DbContextOptions<ItForumDbContext> options) : base(options)
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
