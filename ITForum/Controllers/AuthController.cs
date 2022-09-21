@@ -14,7 +14,7 @@ using System.Text;
 namespace ITForum.Api.Controllers
 {
     [Route("[controller]/[action]")]
-    public class AuthController : BaseController
+    public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<ItForumUser> _userManager;
@@ -28,15 +28,6 @@ namespace ITForum.Api.Controllers
             _configuration = configuration;
             _userManager = userManager;
             _roleManager = roleManager;
-        }
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult> TestAuth()
-        {
-            return Ok(new
-            {
-                user=User.Identity.Name
-            });
         }
         [HttpPost]
         public async Task<ActionResult> SignIn([FromBody]SignInModel model)
@@ -62,7 +53,7 @@ namespace ITForum.Api.Controllers
         {
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 //create error
-                throw new Exception("User not found");
+                throw new Exception("User is already exists");
             if (!ModelState.IsValid) throw new Exception();
             ItForumUser user = new ItForumUser{
                 Email = model.Email,

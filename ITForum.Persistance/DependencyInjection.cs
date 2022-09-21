@@ -26,7 +26,7 @@ namespace ITForum.Persistance
                     RequiredUniqueChars = 1,
                     RequireLowercase = false,
                     RequireNonAlphanumeric = false,
-                    RequireUppercase = true
+                    RequireUppercase = false
                 };
             })
                 .AddEntityFrameworkStores<ItForumDbContext>()
