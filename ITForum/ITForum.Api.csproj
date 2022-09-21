@@ -16,4 +16,9 @@
     <ProjectReference Include="..\ITForum.Persistance\ITForum.Persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UploadedFiles\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

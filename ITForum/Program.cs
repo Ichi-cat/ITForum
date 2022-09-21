@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using ITForum.Application.Topics.Services;
+using Microsoft.Extensions.FileProviders;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +62,7 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 builder.Services.AddPersistance(configuration);
+builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -76,7 +80,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["AuthOptions:Audience"],
         ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"])),//todo: вынести в отдельный файл, добавить секретный ключ
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"])),//todo: ГўГ»Г­ГҐГ±ГІГЁ Гў Г®ГІГ¤ГҐГ«ГјГ­Г»Г© ГґГ Г©Г«, Г¤Г®ГЎГ ГўГЁГІГј Г±ГҐГЄГ°ГҐГІГ­Г»Г© ГЄГ«ГѕГ·
         ValidateIssuerSigningKey = true
     };
 });
@@ -100,6 +104,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")),
+    RequestPath = "/UploadedFiles"
+});
 
 app.UseHttpsRedirection();
 
