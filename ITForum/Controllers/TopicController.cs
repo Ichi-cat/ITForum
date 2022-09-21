@@ -31,7 +31,6 @@ namespace ITForum.Controllers
         {
             var id = await Mediator.Send(new CreateTopicCommand
             { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
-            var id = await Mediator.Send(new CreateTopicCommand { UserId = UserId, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
         [HttpPut]
