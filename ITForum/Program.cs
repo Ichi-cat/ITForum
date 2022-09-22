@@ -10,7 +10,8 @@ using System.Reflection;
 using ITForum.Application.Topics.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Text;
-
+using NLog.Web;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,12 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("init main");
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 builder.Services.AddApplication();
 builder.Services.AddAutoMapper(config =>
@@ -87,6 +94,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+app.Logger.LogCritical("gghsajdh");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -116,6 +124,8 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.Logger.LogCritical("gghsajdh");
 
 app.UseAuthentication();
 app.UseAuthorization();

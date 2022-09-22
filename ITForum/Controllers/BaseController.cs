@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace ITForum.Controllers
 {
     [ApiController]
-    [Authorize(Roles = UserRoles.User)]
+    //[Authorize(Roles = UserRoles.User)]
     [Route("[controller]/")]
     public abstract class BaseController : ControllerBase
     {
