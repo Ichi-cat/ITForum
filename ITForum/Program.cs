@@ -3,14 +3,13 @@ using ITForum.Application.Common.Mappings;
 using ITForum.Application.Interfaces;
 using ITForum.Persistance;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using ITForum.Application.Topics.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Text;
-
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +21,10 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 builder.Services.AddApplication();
 builder.Services.AddAutoMapper(config =>
@@ -116,6 +119,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
 
 app.UseAuthentication();
 app.UseAuthorization();
