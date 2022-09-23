@@ -14,7 +14,7 @@ namespace ITForum.Persistance
             var connectingString = configuration["DbConnection"];
             services.AddDbContext<IItForumDbContext, ItForumDbContext>(options =>
             {
-                options.UseSqlServer(connectingString);
+                options.UseSqlite(connectingString);
             });
 
             services.AddIdentity<ItForumUser, ItForumRole>(options =>
