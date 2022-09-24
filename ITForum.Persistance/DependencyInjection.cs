@@ -15,6 +15,7 @@ namespace ITForum.Persistance
             services.AddDbContext<IItForumDbContext, ItForumDbContext>(options =>
             {
                 options.UseSqlite(connectingString);
+                options.EnableSensitiveDataLogging();
             });
 
             services.AddIdentity<ItForumUser, ItForumRole>(options =>
