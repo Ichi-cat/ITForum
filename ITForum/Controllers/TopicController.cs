@@ -9,6 +9,8 @@ using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Application.Topics.Services.LikesAndDislikes;
+using ITForum.Domain.TopicItems;
 
 namespace ITForum.Controllers
 {
@@ -44,6 +46,13 @@ namespace ITForum.Controllers
         public async Task<ActionResult> DeleteTopic(Guid id)
         {
             await Mediator.Send(new DeleteTopicCommand { UserId = UserId, Id = id });
+            return NoContent();
+        }
+        [HttpPatch]
+        public async Task<ActionResult> Like(UpdateMarkModel updateMarkModel)
+        {
+            await Mediator.Send(new LikeCommand
+            { UserId = UserId, TopicId = updateMarkModel.TopicId, IsLiked = updateMarkModel.IsLiked });
             return NoContent();
         }
     }
