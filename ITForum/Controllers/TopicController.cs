@@ -48,12 +48,5 @@ namespace ITForum.Controllers
             await Mediator.Send(new DeleteTopicCommand { UserId = UserId, Id = id });
             return NoContent();
         }
-        [HttpPatch]
-        public async Task<ActionResult> Like(UpdateMarkModel updateMarkModel)
-        {
-            await Mediator.Send(new LikeCommand
-            { UserId = UserId, TopicId = updateMarkModel.TopicId, IsLiked = updateMarkModel.IsLiked });
-            return NoContent();
-        }
     }
 }
