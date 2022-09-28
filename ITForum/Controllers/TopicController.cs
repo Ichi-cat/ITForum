@@ -9,6 +9,8 @@ using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
 using ITForum.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Application.Topics.Services.LikesAndDislikes;
+using ITForum.Domain.TopicItems;
 
 namespace ITForum.Controllers
 {

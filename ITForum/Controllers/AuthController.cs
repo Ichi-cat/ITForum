@@ -1,12 +1,9 @@
 ﻿using ITForum.Api.Models.Auth;
-using ITForum.Controllers;
 using ITForum.Domain.Errors;
 using ITForum.Persistance.TempEntities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
