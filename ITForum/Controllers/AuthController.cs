@@ -27,7 +27,7 @@ namespace ITForum.Api.Controllers
             _roleManager = roleManager;
         }
         [HttpPost]
-        public async Task<ActionResult> SignIn([FromBody]SignInModel model)
+        public async Task<ActionResult<TokenVm>> SignIn([FromBody]SignInModel model)
         {
             //todo: validation
             if (!ModelState.IsValid) throw new Exception();
@@ -53,14 +53,14 @@ namespace ITForum.Api.Controllers
             }
 
             var token = JwtTokenGenerator(claims);
-            return Ok(new
+            return Ok(new TokenVm
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
             });
         }
         [HttpPost]
-        public async Task<ActionResult> SignUp([FromBody]SignUpModel model)
+        public async Task<ActionResult<TokenVm>> SignUp([FromBody]SignUpModel model)
         {
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 //create error
@@ -105,10 +105,10 @@ namespace ITForum.Api.Controllers
             }
 
             var token = JwtTokenGenerator(claims);
-            return Ok(new
+            return Ok(new TokenVm
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
             });
         }
         [NonAction]

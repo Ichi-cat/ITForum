@@ -9,7 +9,7 @@ namespace ITForum.Api.Controllers
     public class CommentController : BaseController
     {
         [HttpPost]
-        public async Task<ActionResult> CreateComment(CreateCommentModel model)
+        public async Task<ActionResult<Guid>> CreateComment(CreateCommentModel model)
         {
             var id = await Mediator.Send(new CreateCommentCommand
             {

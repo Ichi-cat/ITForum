@@ -17,19 +17,19 @@ namespace ITForum.Controllers
     public class TopicController : BaseController
     {
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetTopicDetailsById(Guid id)
+        public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
             var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { UserId = UserId, Id = id });
             return Ok(topic);
         }
         [HttpGet]
-        public async Task<ActionResult> GetTopicList(int? count = 10)
+        public async Task<ActionResult<TopicListVm>> GetTopicList(int? count = 10)
         {
             var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
             return Ok(topics);
         }
         [HttpPost]
-        public async Task<ActionResult> CreateTopic(CreateTopicModel model)
+        public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
             { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
