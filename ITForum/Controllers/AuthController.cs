@@ -26,6 +26,25 @@ namespace ITForum.Api.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+        /// <summary>
+        /// Login action
+        /// </summary>
+        /// /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST
+        ///     {
+        ///         "userName": "myUserName",
+        ///         "password": "somePassword"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <param name="model">SignInModel</param>
+        /// <response code="200">Success</response>
+        /// todo: 400 code(bad request)
+        /// todo: 500? internal error
+        /// <returns>Returns TokenVm</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignIn([FromBody]SignInModel model)
         {
@@ -59,6 +78,27 @@ namespace ITForum.Api.Controllers
                 Expiration = token.ValidTo
             });
         }
+        /// <summary>
+        /// Registration action
+        /// </summary>
+        /// /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST
+        ///     {
+        ///         "userName": "myUserName",
+        ///         "password": "myPassword",
+        ///         "confirmPassword": "myPassword",
+        ///         "email": "user@example.com"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <param name="model">SignUpModel</param>
+        /// <response code="200">Success</response>
+        /// todo: 400 code(bad request)
+        /// todo: 500? internal error
+        /// <returns>Returns TokenVm</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignUp([FromBody]SignUpModel model)
         {

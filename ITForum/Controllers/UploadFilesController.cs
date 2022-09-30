@@ -13,8 +13,22 @@ namespace ITForum.Api.Controllers
         {
             _bufferedFileUploadService = bufferedFileUploadService;
         }
-        
 
+        /// <summary>
+        /// Upload file to topic
+        /// </summary>
+        /// <remarks>
+        /// Send binary file in multipart/form-data
+        /// 
+        /// </remarks>
+        /// <param name="file">IFormFile</param>
+        /// <response code="200">Success</response>
+        /// todo: 400 code(bad request)
+        /// todo: 500? internal error
+        /// <response code="401">User is unauthorized</response>
+        /// <returns>Returns Success</returns>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost]
         public async Task<ActionResult> Upload(IFormFile file)
         {
