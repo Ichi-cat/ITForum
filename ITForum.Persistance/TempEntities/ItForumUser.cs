@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ITForum.Domain.TopicItems;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace ITForum.Persistance.TempEntities
 {
     public class ItForumUser : IdentityUser<Guid>
     {
-        
+        public List<Mark> Marks { get; set; }
     }
 }
