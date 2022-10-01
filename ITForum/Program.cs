@@ -10,7 +10,7 @@ using ITForum.Application.Topics.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Text;
 using NLog.Web;
-using Microsoft.Extensions.Options;
+using ITForum.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -139,6 +139,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseHttpsRedirection();
 
+app.UseCustomExceptionHandler();
 app.UseRouting();
 
 

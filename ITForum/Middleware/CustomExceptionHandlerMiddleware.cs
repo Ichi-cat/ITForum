@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ITForum.Application.Common.Exceptions;
-
-
+using FluentValidation;
 
 namespace ITForum.Api.Middleware
 {
-    public class ExceptionHandlerMiddleware
+    public class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        public CustomExceptionHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -36,26 +33,18 @@ namespace ITForum.Api.Middleware
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize(validationException.Failures);
+                    result = JsonSerializer.Serialize(validationException.Errors);
                     break;
                 case NotFoundException notFoundException:
                     code = HttpStatusCode.NotFound;
                     result = JsonSerializer.Serialize(new { error = notFoundException.Message });
-                    break;
-                case ForbiddenException forbiddenException:
-                    code = HttpStatusCode.Forbidden;
-                    //result = JsonSerializer.Serialize();
-                    break;
-                case UnauthorizedException unauthorizedException:
-                    code = HttpStatusCode.Unauthorized;
-                    //result = JsonSerializer.Serialize();
                     break;
                 default:
                     result = JsonSerializer.Serialize(new { error = exception.Message });
                     break;
             }
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);
         }
     }
