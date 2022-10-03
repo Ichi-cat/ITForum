@@ -9,7 +9,7 @@ namespace ITForum.Application.Topics.Commands.UpdateTopic
     /// <summary>
     /// Логика обновления топика
     /// </summary>
-    internal class UpdateTopicCommandHandler
+    public class UpdateTopicCommandHandler
         : IRequestHandler<UpdateTopicCommand>
     {
         private readonly IItForumDbContext _context;

@@ -18,6 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITForum.Persistance", "ITFo
 		{2981703C-F515-4809-A2F6-636E25C84480} = {2981703C-F515-4809-A2F6-636E25C84480}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5C961F28-243D-4ED8-A8AB-2C14F1472E26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITForum.Tests", "ITForum.Tests\ITForum.Tests.csproj", "{94AC7881-898F-4A3E-BC16-42CE492DB769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,10 @@ Global
 		{955BB9CA-FD13-4B07-A235-53065A5346D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{955BB9CA-FD13-4B07-A235-53065A5346D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{955BB9CA-FD13-4B07-A235-53065A5346D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94AC7881-898F-4A3E-BC16-42CE492DB769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AC7881-898F-4A3E-BC16-42CE492DB769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AC7881-898F-4A3E-BC16-42CE492DB769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AC7881-898F-4A3E-BC16-42CE492DB769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +55,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2981703C-F515-4809-A2F6-636E25C84480} = {81115A08-FC87-458D-A581-9489E194FA64}
 		{80ECB96A-95AD-4997-A713-E9A21DE7EC55} = {9EA206D6-257C-4FCA-ADFE-19B625AA2E30}
+		{94AC7881-898F-4A3E-BC16-42CE492DB769} = {5C961F28-243D-4ED8-A8AB-2C14F1472E26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {878B0363-0EEC-4830-8672-708F2C77E702}
