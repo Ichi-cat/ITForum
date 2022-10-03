@@ -3,10 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
+    <PackageReference Include="NLog" Version="5.0.4" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -14,6 +18,11 @@
     <ProjectReference Include="..\ITForum.Application\ITForum.Application.csproj" />
     <ProjectReference Include="..\ITForum.Domain\ITForum.Domain.csproj" />
     <ProjectReference Include="..\ITForum.Persistance\ITForum.Persistance.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UploadedFiles\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
