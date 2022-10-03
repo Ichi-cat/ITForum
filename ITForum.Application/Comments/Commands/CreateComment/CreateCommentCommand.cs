@@ -12,7 +12,7 @@ namespace ITForum.Application.Comments.Commands.CreateComment
     {
         public Guid UserId { get; set; }
         public string Content { get; set; }
-        public Topic? Topic { get; set; }
-        public Comment? Comm { get; set; }
+        public Guid TopicId { get; set; }= Guid.Empty;
+        public Guid CommId { get; set; }=Guid.Empty;
     }
 }
