@@ -7,5 +7,6 @@
         public string Content { get; set; }
         public Topic? Topic { get; set; }
         public Comment? Comm { get; set; }
+        public List<Mark> Marks { get; set; }
     }
 }
