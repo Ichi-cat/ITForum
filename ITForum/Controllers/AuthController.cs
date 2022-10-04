@@ -1,10 +1,12 @@
 ﻿using ITForum.Api.Models.Auth;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Domain.Errors;
+using ITForum.Domain.Errors.Generals;
 using ITForum.Persistance.TempEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -41,11 +43,9 @@ namespace ITForum.Api.Controllers
         ///     
         /// </remarks>
         /// <param name="model">SignInModel</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
         /// <returns>Returns TokenVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignIn([FromBody]SignInModel model)
         {
@@ -95,11 +95,9 @@ namespace ITForum.Api.Controllers
         ///     
         /// </remarks>
         /// <param name="model">SignUpModel</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
         /// <returns>Returns TokenVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignUp([FromBody]SignUpModel model)
         {
