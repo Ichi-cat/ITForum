@@ -41,6 +41,10 @@ namespace ITForum.Api.Middleware
                     code = HttpStatusCode.NotFound;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, notFoundException.Message));
                     break;
+                case UserAuthException userAuthException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, userAuthException.Message));
+                    break;
                 default:
                     code = HttpStatusCode.InternalServerError;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, "Internal server error"));
