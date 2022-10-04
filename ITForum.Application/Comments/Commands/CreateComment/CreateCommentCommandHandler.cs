@@ -24,7 +24,6 @@ namespace ITForum.Application.Comments.Commands.CreateComment
                 Content = request.Content,
                 TopicId=request.TopicId,
                 Id = Guid.NewGuid(),
-                CommId=request.CommId
             };
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
