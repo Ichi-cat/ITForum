@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ITForum.Domain.TopicItems.Mark.MarkType;
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
-    internal class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
+    public class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
     {
         private readonly IItForumDbContext _context;
         public GetMyLikesQueryHandler(IItForumDbContext context)
@@ -18,15 +19,17 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
         }
         public async Task<MarkListVM> Handle(GetMyLikesQuery request, CancellationToken cancellationToken)
         {
-            var marks = _context.Marks.Where(m => m.UserId == request.UserId).ToList();
+            var marks = _context.Marks.Where(m => m.UserId == request.UserId && m.IsLiked == LIKE).ToList();
+            
             var markList = new MarkListVM();
-            markList.Marks = marks.Select(m => new MarkVM
+            if (markList != null)
             {
-                Id = m.Id,
-                UserId = m.UserId,
-                TopicId = m.TopicId,
-                IsLiked = m.IsLiked
-            }).ToList();
+                markList.Marks = marks.Select(m => new MarkVM
+                {
+                    Id = m.Id,
+                    TopicId = m.TopicId,
+                }).ToList();
+            }
             return markList;
         }
     }
