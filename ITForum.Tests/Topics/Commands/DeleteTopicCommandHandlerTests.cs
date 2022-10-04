@@ -21,13 +21,13 @@ namespace ITForum.Tests.Topics.Commands
             // Act
             await handler.Handle(new DeleteTopicCommand
             {
-                Id = ITForumContextFactory.TopicIdForDelete,
-                UserId = ITForumContextFactory.UserAId
+                Id = TopicContextFactory.TopicIdForDelete,
+                UserId = TopicContextFactory.UserAId
             }, CancellationToken.None);
 
             // Assert
             Assert.Null(Context.Topics.SingleOrDefault(note =>
-                note.Id == ITForumContextFactory.TopicIdForDelete));
+                note.Id == TopicContextFactory.TopicIdForDelete));
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace ITForum.Tests.Topics.Commands
                     new DeleteTopicCommand
                     {
                         Id = Guid.NewGuid(),
-                        UserId = ITForumContextFactory.UserAId
+                        UserId = TopicContextFactory.UserAId
                     },
                     CancellationToken.None));
         }
@@ -58,7 +58,7 @@ namespace ITForum.Tests.Topics.Commands
                 new CreateTopicCommand
                 {
                     Name = "TopicName",
-                    UserId = ITForumContextFactory.UserAId
+                    UserId = TopicContextFactory.UserAId
                 }, CancellationToken.None);
 
             // Act
@@ -68,7 +68,7 @@ namespace ITForum.Tests.Topics.Commands
                     new DeleteTopicCommand
                     {
                         Id = noteId,
-                        UserId = ITForumContextFactory.UserBId
+                        UserId = TopicContextFactory.UserBId
                     }, CancellationToken.None));
         }
     }

@@ -1,11 +1,9 @@
-﻿using ITForum.Domain.TopicItems;
-
-namespace ITForum.Api.Models
+﻿namespace ITForum.Api.Models
 {
     public class CreateCommentModel
     {
+        public Guid CommId { get; set; }
+        public Guid TopicId { get; set; }
         public string Content { get; set; }
-        public Topic? Topic { get; set; }
-        public Comment? Comm { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Tests.Common
 {
-    public class ITForumContextFactory
+    public class TopicContextFactory
     {
         public static Guid UserAId = Guid.NewGuid();
         public static Guid UserBId = Guid.NewGuid();
