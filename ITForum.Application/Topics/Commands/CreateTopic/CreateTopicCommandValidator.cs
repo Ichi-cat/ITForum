@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Commands.CreateTopic
 {
-    internal class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
+    public class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
     {
         public CreateTopicCommandValidator()
         {

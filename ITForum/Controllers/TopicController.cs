@@ -90,7 +90,7 @@ namespace ITForum.Controllers
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
-            { UserId = Guid.Empty, Name = model.Name, Content = model.Content });
+            { UserId = UserId, Name = model.Name, Content = model.Content });
             return Ok(id);
         }
         /// <summary>

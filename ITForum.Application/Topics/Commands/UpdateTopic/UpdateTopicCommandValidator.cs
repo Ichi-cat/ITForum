@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Commands.UpdateTopic
 {
-    internal class UpdateTopicCommandValidator : AbstractValidator<UpdateTopicCommand>
+    public class UpdateTopicCommandValidator : AbstractValidator<UpdateTopicCommand>
     {
         public UpdateTopicCommandValidator()
         {

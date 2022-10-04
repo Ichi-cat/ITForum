@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery
 {
-    internal class GetTopicDetailsByIdQueryValidator : AbstractValidator<GetTopicDetailsByIdQuery>
+    public class GetTopicDetailsByIdQueryValidator : AbstractValidator<GetTopicDetailsByIdQuery>
     {
         public GetTopicDetailsByIdQueryValidator()
         {

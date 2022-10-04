@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Queries.GetMyTopicListCommand
 {
-    internal class GetMyTopicListQueryValidator : AbstractValidator<GetMyTopicListQuery>
+    public class GetMyTopicListQueryValidator : AbstractValidator<GetMyTopicListQuery>
     {
         public GetMyTopicListQueryValidator()
         {

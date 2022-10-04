@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Commands.DeleteTopic
 {
-    internal class DeleteTopicCommandValidator : AbstractValidator<DeleteTopicCommand>
+    public class DeleteTopicCommandValidator : AbstractValidator<DeleteTopicCommand>
     {
         public DeleteTopicCommandValidator()
         {
