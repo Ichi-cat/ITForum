@@ -1,6 +1,8 @@
 ﻿using ITForum.Application.Interfaces;
 using ITForum.Controllers;
+using ITForum.Domain.Errors.Generals;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ITForum.Api.Controllers
 {
@@ -22,13 +24,11 @@ namespace ITForum.Api.Controllers
         /// 
         /// </remarks>
         /// <param name="file">IFormFile</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
-        /// <response code="401">User is unauthorized</response>
         /// <returns>Returns Success</returns>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(204)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpPost]
         public async Task<ActionResult> Upload(IFormFile file)
         {

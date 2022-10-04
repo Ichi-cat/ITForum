@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ITForum.Application.Topics.Services.LikesAndDislikes;
 using ITForum.Domain.TopicItems;
+using Swashbuckle.AspNetCore.Annotations;
+using ITForum.Domain.Errors.Generals;
 
 namespace ITForum.Controllers
 {
@@ -27,13 +29,11 @@ namespace ITForum.Controllers
         ///     
         /// </remarks>
         /// <param name="id">Guid</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
-        /// <response code="401">User is unauthorized</response>
         /// <returns>Returns TopicDetailsVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(200, type: typeof(TopicDetailsVm))]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
@@ -52,13 +52,10 @@ namespace ITForum.Controllers
         ///     
         /// </remarks>
         /// <param name="count">Int32</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
-        /// <response code="401">User is unauthorized</response>
         /// <returns>Returns TopicListVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(200, type: typeof(TopicListVm))]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
         [HttpGet]
         public async Task<ActionResult<TopicListVm>> GetTopicList(int? count = 10)
         {
@@ -84,8 +81,9 @@ namespace ITForum.Controllers
         /// todo: 500? internal error
         /// <response code="401">User is unauthorized</response>
         /// <returns>Returns Guid</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(200, type: typeof(Guid))]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
         [HttpPost]
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
@@ -113,8 +111,10 @@ namespace ITForum.Controllers
         /// todo: 500? internal error
         /// <response code="401">User is unauthorized</response>
         /// <returns>Returns NoContent</returns>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(204)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpPut]
         public async Task<ActionResult> UpdateTopic(UpdateTopicModel updateTopicModel)
         {
@@ -133,13 +133,11 @@ namespace ITForum.Controllers
         ///     
         /// </remarks>
         /// <param name="id">Guid</param>
-        /// <response code="204">No content</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
-        /// <response code="401">User is unauthorized</response>
         /// <returns>Returns NoContent</returns>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(204)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTopic(Guid id)
         {

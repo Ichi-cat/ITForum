@@ -5,6 +5,8 @@ using ITForum.Application.Comments.Commands.DeleteComment;
 using ITForum.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Domain.Errors.Generals;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ITForum.Api.Controllers
 {
@@ -24,13 +26,10 @@ namespace ITForum.Api.Controllers
         ///     //todo: add sample
         /// </remarks>
         /// <param name="model">CreateCommentModel</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
-        /// <response code="401">User is unauthorized</response>
         /// <returns>Returns Guid</returns>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(201)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
         [HttpPost]
         public async Task<ActionResult<Guid>> CreateComment(CreateCommentModel model)
         {
@@ -43,6 +42,10 @@ namespace ITForum.Api.Controllers
             });
             return Ok(id);
         }
+        [SwaggerResponse(204)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpPut]
         public async Task<ActionResult> UpdateComment(UpdateCommentModel model)
         {
@@ -51,6 +54,10 @@ namespace ITForum.Api.Controllers
             MediatR.Unit id = await Mediator.Send(command);
             return NoContent();
         }
+        [SwaggerResponse(204)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
         [HttpDelete]
         public async Task<ActionResult> DeleteComment(Guid id)
         {
