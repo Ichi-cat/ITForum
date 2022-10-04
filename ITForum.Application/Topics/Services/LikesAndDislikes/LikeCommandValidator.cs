@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes
 {
-    internal class LikeCommandValidator : AbstractValidator<LikeCommand>
+    public class LikeCommandValidator : AbstractValidator<LikeCommand>
     {
         public LikeCommandValidator()
         {
