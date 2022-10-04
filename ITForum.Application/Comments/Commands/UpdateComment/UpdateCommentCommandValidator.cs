@@ -18,8 +18,6 @@ namespace ITForum.Application.Comments.Commands.UpdateComment
                 .MaximumLength(500);
             RuleFor(updateCommentCommand => updateCommentCommand.UserId)
                 .NotEqual(Guid.Empty);
-            RuleFor(updateCommentCommand => updateCommentCommand.Topic)
-                .NotNull();
         }
     }
 }
