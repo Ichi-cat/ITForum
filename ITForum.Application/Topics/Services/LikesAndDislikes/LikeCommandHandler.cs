@@ -29,20 +29,20 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes
                 var mark = new Mark
                 {
                     Id = Guid.NewGuid(),
-                    isLiked = request.IsLiked,
+                    IsLiked = request.IsLiked,
                     TopicId = request.TopicId
                 };
                 await _context.Marks.AddAsync(mark);
             }
             else
             {
-                if (entityMark.isLiked == request.IsLiked)
+                if (entityMark.IsLiked == request.IsLiked)
                 {
                     _context.Marks.Remove(entityMark);
                 }
                 else
                 {
-                    entityMark.isLiked = request.IsLiked;
+                    entityMark.IsLiked = request.IsLiked;
                 }
             }
             await _context.SaveChangesAsync(cancellationToken);

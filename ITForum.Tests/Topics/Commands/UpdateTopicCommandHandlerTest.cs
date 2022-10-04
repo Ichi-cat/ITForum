@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace ITForum.Tests.Topics.Commands
 {
@@ -22,14 +23,14 @@ namespace ITForum.Tests.Topics.Commands
             // Act
             await handler.Handle(new UpdateTopicCommand
             {
-                Id = ITForumContextFactory.TopicIdForUpdate,
-                UserId = ITForumContextFactory.UserBId,
+                Id = TopicContextFactory.TopicIdForUpdate,
+                UserId = TopicContextFactory.UserBId,
                 Name = updatedName
             }, CancellationToken.None);
 
             // Assert
             Assert.NotNull(await Context.Topics.SingleOrDefaultAsync(note =>
-                note.Id == ITForumContextFactory.TopicIdForUpdate &&
+                note.Id == TopicContextFactory.TopicIdForUpdate &&
                 note.Name == updatedName));
         }
 
@@ -46,7 +47,7 @@ namespace ITForum.Tests.Topics.Commands
                     new UpdateTopicCommand
                     {
                         Id = Guid.NewGuid(),
-                        UserId = ITForumContextFactory.UserAId
+                        UserId = TopicContextFactory.UserAId
                     },
                     CancellationToken.None));
         }
@@ -64,8 +65,8 @@ namespace ITForum.Tests.Topics.Commands
                 await handler.Handle(
                     new UpdateTopicCommand
                     {
-                        Id = ITForumContextFactory.TopicIdForUpdate,
-                        UserId = ITForumContextFactory.UserAId
+                        Id = TopicContextFactory.TopicIdForUpdate,
+                        UserId = TopicContextFactory.UserAId
                     },
                     CancellationToken.None);
             });

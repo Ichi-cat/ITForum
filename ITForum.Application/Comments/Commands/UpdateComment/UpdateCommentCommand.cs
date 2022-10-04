@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Comments.Commands.UpdateComment
 {
-    internal class UpdateCommentCommand:IRequest
+    public class UpdateCommentCommand:IRequest
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string Content { get; set; }
-        public Topic? Topic { get; set; }
-        public Comment? Comm { get; set; }
     }
 }

@@ -12,11 +12,11 @@ namespace ITForum.Tests.Common
         protected readonly ItForumDbContext Context;
         public TestCommandBase()
         {
-            Context=ITForumContextFactory.Create();
+            Context=TopicContextFactory.Create();
         }
         public void Dispose()
         {
-            ITForumContextFactory.Destroy(Context);
+            TopicContextFactory.Destroy(Context);
         }
     }
 }

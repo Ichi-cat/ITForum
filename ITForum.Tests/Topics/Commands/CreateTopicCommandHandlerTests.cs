@@ -21,12 +21,12 @@ namespace ITForum.Tests.Topics.Commands
                 {
                     Name = topicName,
                     Content = topicContent,
-                    UserId = ITForumContextFactory.UserAId
+                    UserId = TopicContextFactory.UserAId
                 }, CancellationToken.None);
 
             Assert.NotNull(
                 await Context.Topics.SingleOrDefaultAsync(topic =>
-                topic.UserId == ITForumContextFactory.UserAId && topic.Name == topicName &&
+                topic.UserId == TopicContextFactory.UserAId && topic.Name == topicName &&
                 topic.Content == topicContent)
                 );
         }

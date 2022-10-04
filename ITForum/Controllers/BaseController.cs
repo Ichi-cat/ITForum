@@ -10,6 +10,7 @@ namespace ITForum.Controllers
     [ApiController]
     //[Authorize(Roles = UserRoles.User)]
     [Route("[controller]/")]
+    [Produces("application/json")]
     public abstract class BaseController : ControllerBase
     {
         private IMediator _mediator;

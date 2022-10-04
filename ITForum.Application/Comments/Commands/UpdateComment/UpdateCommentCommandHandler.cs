@@ -27,7 +27,6 @@ namespace ITForum.Application.Comments.Commands.UpdateComment
                 throw new NotFoundException(nameof(Comment), request.Id);
             }
             entity.Content = request.Content;
-            entity.Topic = request.Topic;
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

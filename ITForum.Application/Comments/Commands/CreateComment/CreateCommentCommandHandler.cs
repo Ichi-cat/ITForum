@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Comments.Commands.CreateComment
 {
-    internal class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Guid>
+    public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Guid>
     {
         private readonly IItForumDbContext _context;
         public CreateCommentCommandHandler(IItForumDbContext context)
@@ -22,9 +22,9 @@ namespace ITForum.Application.Comments.Commands.CreateComment
             {
                 UserId = request.UserId,
                 Content = request.Content,
+                TopicId=request.TopicId,
                 Id = Guid.NewGuid(),
-                Topic = request.Topic,
-                Comm = request.Comm
+                CommId=request.CommId
             };
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();

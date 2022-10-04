@@ -10,6 +10,7 @@ using ITForum.Application.Topics.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Text;
 using NLog.Web;
+using ITForum.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,8 +62,28 @@ builder.Services.AddSwaggerGen(c =>
 
             },
             new List<string>()
-          }
-        });
+        }
+    });
+
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ITForum api",
+        Description = "It's our pet project",
+        Contact = new OpenApiContact
+        {
+            Name = "Our Contact",
+            Email = "PashaMS@gmail.com"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Empty license",
+            Url = new Uri("httsp://license.com")
+        }
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 builder.Services.AddPersistance(configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
@@ -118,6 +139,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseHttpsRedirection();
 
+app.UseCustomExceptionHandler();
 app.UseRouting();
 
 
