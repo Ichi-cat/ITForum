@@ -2,6 +2,8 @@
 using System.Text.Json;
 using ITForum.Application.Common.Exceptions;
 using FluentValidation;
+using ITForum.Domain.Errors.Generals;
+using ITForum.Domain.Errors;
 
 namespace ITForum.Api.Middleware
 {
@@ -12,7 +14,7 @@ namespace ITForum.Api.Middleware
         {
             _next = next;
         }
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, ILogger<CustomExceptionHandlerMiddleware> logger)
         {
             try
             {
@@ -20,11 +22,11 @@ namespace ITForum.Api.Middleware
             }
             catch (Exception exception)
             {
-                await HandleExceptionAsync(context, exception);
+                await HandleExceptionAsync(context, exception, logger);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger<CustomExceptionHandlerMiddleware> logger)
         {
             var result = String.Empty;
             var code = HttpStatusCode.InternalServerError;
@@ -33,14 +35,16 @@ namespace ITForum.Api.Middleware
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize(validationException.Errors);
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new ValidateExceptionVm(validationException));
                     break;
                 case NotFoundException notFoundException:
                     code = HttpStatusCode.NotFound;
-                    result = JsonSerializer.Serialize(new { error = notFoundException.Message });
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, notFoundException.Message));
                     break;
                 default:
-                    result = JsonSerializer.Serialize(new { error = exception.Message });
+                    code = HttpStatusCode.InternalServerError;
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, "Internal server error"));
+                    logger.LogError(exception.Message);
                     break;
             }
             context.Response.ContentType = "application/json";
