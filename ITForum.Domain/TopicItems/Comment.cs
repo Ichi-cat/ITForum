@@ -6,9 +6,9 @@
         public Guid UserId { get; set; }
         public string Content { get; set; }
         public Topic? Topic { get; set; }
-        public Guid TopicId { get; set; }
+        public Guid? TopicId { get; set; }
         public Comment? Comm { get; set; }
-        public Guid CommId { get; set; }
+        public Guid? CommId { get; set; }
         public List<Mark> Marks { get; set; }
     }
 }
