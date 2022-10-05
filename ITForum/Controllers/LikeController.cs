@@ -3,6 +3,7 @@ using ITForum.Application.Topics.Services.LikesAndDislikes;
 using ITForum.Application.Topics.Services.LikesAndDislikes.Get;
 using ITForum.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Domain.TopicItems;
 
 namespace ITForum.Api.Controllers
 {
