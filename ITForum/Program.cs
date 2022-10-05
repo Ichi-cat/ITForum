@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v1",
+        Version = "0.0.1",
         Title = "ITForum api",
         Description = "It's our pet project",
         Contact = new OpenApiContact
