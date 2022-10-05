@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
-    internal class MarkListVM
+    public class MarkListVM
     {
         public IList<MarkVM> Marks { get; set; }
     }

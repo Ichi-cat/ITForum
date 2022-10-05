@@ -2,11 +2,11 @@
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
-    internal class GetMyLikesQueryValidator : AbstractValidator<GetMyLikesQuery>
+    public class GetMyLikesQueryValidator : AbstractValidator<GetMyLikesQuery>
     {
         public GetMyLikesQueryValidator()
         {
-            RuleFor(getMyLikesQuery => getMyLikesQuery.UserId)
+            RuleFor(x => x.UserId)
                 .NotEqual(Guid.Empty);
         }
     }

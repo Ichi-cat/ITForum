@@ -30,7 +30,8 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes
                 {
                     Id = Guid.NewGuid(),
                     IsLiked = request.IsLiked,
-                    TopicId = request.TopicId
+                    TopicId = request.TopicId,
+                    UserId = request.UserId
                 };
                 await _context.Marks.AddAsync(mark);
             }

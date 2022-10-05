@@ -1,6 +1,7 @@
 ﻿using ITForum.Api.Models;
 using ITForum.Application.Topics.Services.LikesAndDislikes;
 using ITForum.Application.Topics.Services.LikesAndDislikes.Get;
+using ITForum.Application.Topics.Services.LikesAndDislikes.GetTopicLikesQuery;
 using ITForum.Controllers;
 using ITForum.Domain.Errors.Generals;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,12 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> GetMyLikes()
         {
             var result = await Mediator.Send(new GetMyLikesQuery { UserId = UserId });
+            return Ok(result);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetTopicLikes(Guid topicId)
+        {
+            var result = await Mediator.Send(new GetTopicLikesQuery { UserId = UserId, TopicId = topicId});
             return Ok(result);
         }
     }
