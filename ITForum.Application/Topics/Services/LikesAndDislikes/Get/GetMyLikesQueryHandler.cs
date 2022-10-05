@@ -14,18 +14,11 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
         }
         public async Task<MarkListVM> Handle(GetMyLikesQuery request, CancellationToken cancellationToken)
         {
-            var markList = await _context.Marks.Where(m => m.UserId == request.UserId).Select(m => new MarkVM
-            {
-                Id = m.Id,
-                UserId = m.UserId,
-                TopicId = m.TopicId,
-                IsLiked = m.IsLiked
-            }).ToListAsync();
-            
-            return new MarkListVM
-            {
-                Marks = markList
-            };
+            var markList = await _context.Marks
+                .Where(m => m.UserId == request.UserId && m.IsLiked == MarkType.LIKE)
+                .Select(m => new MarkVM { Id = m.Id, TopicId = m.TopicId }).ToListAsync();
+
+            return new MarkListVM { Marks = markList };
         }
     }
 }
