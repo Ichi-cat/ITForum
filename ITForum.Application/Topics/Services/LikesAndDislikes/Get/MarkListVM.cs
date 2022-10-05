@@ -9,6 +9,6 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
     public class MarkListVM
     {
-        public IList<MarkVM> Marks { get; set; }
+        public List<MarkVM> Marks { get; set; }
     }
 }

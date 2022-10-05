@@ -1,4 +1,4 @@
-﻿using ITForum.Application.Interfaces;
+using ITForum.Application.Interfaces;
 using MediatR;
 using ITForum.Domain.TopicItems;
 using Microsoft.EntityFrameworkCore;
@@ -14,18 +14,18 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
         }
         public async Task<MarkListVM> Handle(GetMyLikesQuery request, CancellationToken cancellationToken)
         {
-            var marks = await _context.Marks.Where(m => m.UserId == request.UserId && m.IsLiked == MarkType.LIKE).ToListAsync();
-            
-            var markList = new MarkListVM();
-            if (markList != null)
+            var markList = await _context.Marks.Where(m => m.UserId == request.UserId).Select(m => new MarkVM
             {
-                markList.Marks = marks.Select(m => new MarkVM
-                {
-                    Id = m.Id,
-                    TopicId = m.TopicId,
-                }).ToList();
-            }
-            return markList;
+                Id = m.Id,
+                UserId = m.UserId,
+                TopicId = m.TopicId,
+                IsLiked = m.IsLiked
+            }).ToListAsync();
+            
+            return new MarkListVM
+            {
+                Marks = markList
+            };
         }
     }
 }

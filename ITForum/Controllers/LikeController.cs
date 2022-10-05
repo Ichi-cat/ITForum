@@ -1,10 +1,11 @@
-﻿using ITForum.Api.Models;
+using ITForum.Api.Models;
 using ITForum.Application.Topics.Services.LikesAndDislikes;
 using ITForum.Application.Topics.Services.LikesAndDislikes.Get;
 using ITForum.Application.Topics.Services.LikesAndDislikes.GetTopicLikesQuery;
 using ITForum.Controllers;
 using ITForum.Domain.Errors.Generals;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Domain.TopicItems;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ITForum.Api.Controllers
