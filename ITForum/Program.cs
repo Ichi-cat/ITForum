@@ -11,6 +11,9 @@ using Microsoft.Extensions.FileProviders;
 using System.Text;
 using NLog.Web;
 using ITForum.Api.Middleware;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using ITForum.Persistance.TempEntities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,7 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
+
 builder.Services.AddApplication();
 builder.Services.AddAutoMapper(config =>
 {
@@ -38,9 +42,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. 
+        Description = @$"JWT Authorization header using the Bearer scheme. 
                       Enter 'Bearer' [space] and then your token in the text input below.
-                      Example: 'Bearer 12345abcdef'",
+                      Example: 'Bearer {Initialize.CreateTestUserJwt(builder.Configuration)}'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -110,6 +114,19 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ItForumUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<ItForumRole>>();
+    try
+    {
+        Initialize.CreateTestUser(userManager, roleManager);
+    }
+    catch (Exception ex) { }
+}
+
 
 if (app.Environment.IsDevelopment())
 {
