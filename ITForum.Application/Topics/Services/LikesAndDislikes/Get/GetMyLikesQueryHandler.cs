@@ -1,12 +1,7 @@
 ﻿using ITForum.Application.Interfaces;
-using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ITForum.Domain.TopicItems.Mark.MarkType;
+using ITForum.Domain.TopicItems;
+using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
@@ -19,7 +14,7 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
         }
         public async Task<MarkListVM> Handle(GetMyLikesQuery request, CancellationToken cancellationToken)
         {
-            var marks = _context.Marks.Where(m => m.UserId == request.UserId && m.IsLiked == LIKE).ToList();
+            var marks = await _context.Marks.Where(m => m.UserId == request.UserId && m.IsLiked == MarkType.LIKE).ToListAsync();
             
             var markList = new MarkListVM();
             if (markList != null)
