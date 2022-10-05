@@ -1,9 +1,12 @@
 ﻿using ITForum.Api.Models.Auth;
+using ITForum.Application.Common.Exceptions;
 using ITForum.Domain.Errors;
+using ITForum.Domain.Errors.Generals;
 using ITForum.Persistance.TempEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -40,11 +43,9 @@ namespace ITForum.Api.Controllers
         ///     
         /// </remarks>
         /// <param name="model">SignInModel</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
         /// <returns>Returns TokenVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignIn([FromBody]SignInModel model)
         {
@@ -53,10 +54,10 @@ namespace ITForum.Api.Controllers
             var user = await _userManager.FindByNameAsync(model.UserName);
             if(user == null)
                 //create error
-                throw new Exception("User not found");
+                throw new UserAuthException("User not found");
             if(!await _userManager.CheckPasswordAsync(user, model.Password))
                 //create error
-                throw new Exception("Password is not right");
+                throw new UserAuthException("Password is not right");
 
             var claims = new List<Claim>()
             {
@@ -94,17 +95,15 @@ namespace ITForum.Api.Controllers
         ///     
         /// </remarks>
         /// <param name="model">SignUpModel</param>
-        /// <response code="200">Success</response>
-        /// todo: 400 code(bad request)
-        /// todo: 500? internal error
         /// <returns>Returns TokenVm</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignUp([FromBody]SignUpModel model)
         {
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 //create error
-                throw new Exception("User is already exists");
+                throw new UserAuthException("User is already exists");
             if (!ModelState.IsValid) throw new Exception();
             ItForumUser user = new ItForumUser{
                 Email = model.Email,

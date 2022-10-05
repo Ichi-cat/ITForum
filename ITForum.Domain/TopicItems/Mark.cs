@@ -7,10 +7,11 @@
         public MarkType IsLiked { get; set; }
         public Guid UserId { get; set; }
 
-        public enum MarkType
-        {
-            LIKE,
-            DISLIKE, 
-        }
+        
+    }
+    public enum MarkType
+    {
+        LIKE,
+        DISLIKE,
     }
 }

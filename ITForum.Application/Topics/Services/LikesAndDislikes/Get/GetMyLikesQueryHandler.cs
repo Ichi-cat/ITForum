@@ -1,10 +1,11 @@
-﻿using ITForum.Application.Interfaces;
+using ITForum.Application.Interfaces;
 using MediatR;
+using ITForum.Domain.TopicItems;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
-    internal class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
+    public class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
     {
         private readonly IItForumDbContext _context;
         public GetMyLikesQueryHandler(IItForumDbContext context)
