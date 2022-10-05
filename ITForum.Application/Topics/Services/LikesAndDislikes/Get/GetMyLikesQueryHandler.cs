@@ -1,15 +1,11 @@
-﻿using ITForum.Application.Interfaces;
-using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
+using ITForum.Application.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ITForum.Domain.TopicItems;
+using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
 {
-    internal class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
+    public class GetMyLikesQueryHandler : IRequestHandler<GetMyLikesQuery, MarkListVM>
     {
         private readonly IItForumDbContext _context;
         public GetMyLikesQueryHandler(IItForumDbContext context)
@@ -18,16 +14,18 @@ namespace ITForum.Application.Topics.Services.LikesAndDislikes.Get
         }
         public async Task<MarkListVM> Handle(GetMyLikesQuery request, CancellationToken cancellationToken)
         {
-            var marks = _context.Marks.Where(m => m.UserId == request.UserId).ToList();
-            var markList = new MarkListVM();
-            markList.Marks = marks.Select(m => new MarkVM
+            var markList = await _context.Marks.Where(m => m.UserId == request.UserId).Select(m => new MarkVM
             {
                 Id = m.Id,
                 UserId = m.UserId,
                 TopicId = m.TopicId,
                 IsLiked = m.IsLiked
-            }).ToList();
-            return markList;
+            }).ToListAsync();
+            
+            return new MarkListVM
+            {
+                Marks = markList
+            };
         }
     }
 }
