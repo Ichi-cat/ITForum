@@ -136,6 +136,7 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
+    app.UseCors("AllowAll");
 }
 
 // Configure the HTTP request pipeline.
@@ -158,8 +159,6 @@ app.UseHttpsRedirection();
 
 
 app.UseRouting();
-
-app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapDefaultControllerRoute();
