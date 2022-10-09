@@ -2,7 +2,7 @@
 
 namespace ITForum.Application.Common.Mappings
 {
-    public interface IMap<T>
+    public interface IMap
     {
         void Mapping(Profile profile);
     }

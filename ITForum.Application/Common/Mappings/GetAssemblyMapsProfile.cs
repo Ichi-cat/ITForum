@@ -9,7 +9,7 @@ namespace ITForum.Application.Common.Mappings
         {
             var types = assembly.GetTypes().Where(type
                 => type.GetInterfaces().Any(iType
-                => iType == typeof(IMap<>))).ToList();
+                => iType == typeof(IMap))).ToList();
 
             types.ForEach(type =>
             {
