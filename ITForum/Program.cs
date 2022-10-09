@@ -17,16 +17,6 @@ using ITForum.Persistance.TempEntities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//TODO:NEED REFACTORING
-IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
@@ -89,7 +79,7 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-builder.Services.AddPersistance(configuration);
+builder.Services.AddPersistance(builder.Configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
 
 builder.Services.AddAuthentication(options =>
