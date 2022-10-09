@@ -122,7 +122,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = services.GetRequiredService<RoleManager<ItForumRole>>();
     try
     {
-        Initialize.CreateTestUser(userManager, roleManager);
+        await Initialize.CreateTestUser(userManager, roleManager);
     }
     catch (Exception ex) { }
 }

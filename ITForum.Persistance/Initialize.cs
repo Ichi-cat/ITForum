@@ -15,7 +15,7 @@ namespace ITForum.Persistance
         {
 
         }
-        public static void CreateTestUser(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager)
+        public static async Task CreateTestUser(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager)
         {
             if (userManager.FindByNameAsync(TestUser.name).GetAwaiter().GetResult() == null)
             {
@@ -25,15 +25,15 @@ namespace ITForum.Persistance
                     Email = TestUser.email,
                     UserName = TestUser.name
                 };
-                var result = userManager.CreateAsync(user, TestUser.password).GetAwaiter().GetResult();
-                if (!roleManager.RoleExistsAsync(UserRoles.Admin).GetAwaiter().GetResult())
-                     roleManager.CreateAsync(new ItForumRole(UserRoles.Admin)).GetAwaiter();
-                if (!roleManager.RoleExistsAsync(UserRoles.User).GetAwaiter().GetResult())
-                    roleManager.CreateAsync(new ItForumRole(UserRoles.User)).GetAwaiter();
+                var result = await userManager.CreateAsync(user, TestUser.password);
+                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                    await roleManager.CreateAsync(new ItForumRole(UserRoles.Admin));
+                if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                    await roleManager.CreateAsync(new ItForumRole(UserRoles.User));
                 
-                if (roleManager.RoleExistsAsync(UserRoles.User).GetAwaiter().GetResult())
+                if (await roleManager.RoleExistsAsync(UserRoles.User))
                 {
-                    userManager.AddToRoleAsync(user, UserRoles.User).GetAwaiter();
+                    await userManager.AddToRoleAsync(user, UserRoles.User);
                 }
             }
         }
