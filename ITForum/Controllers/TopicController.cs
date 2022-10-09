@@ -13,6 +13,7 @@ using ITForum.Application.Topics.Services.LikesAndDislikes;
 using ITForum.Domain.TopicItems;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Domain.Errors.Generals;
+using System.Collections;
 
 namespace ITForum.Controllers
 {
@@ -57,10 +58,10 @@ namespace ITForum.Controllers
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [HttpGet]
-        public async Task<ActionResult<TopicListVm>> GetTopicList(int? count = 10)
+        public async Task<ActionResult<IEnumerable<TopicItemVm>>> GetTopicList(int? count = 10)
         {
             var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
-            return Ok(topics);
+            return Ok(topics.Topics);
         }
         /// <summary>
         /// Create topic
@@ -119,7 +120,7 @@ namespace ITForum.Controllers
         public async Task<ActionResult> UpdateTopic(UpdateTopicModel updateTopicModel)
         {
             await Mediator.Send(new UpdateTopicCommand
-            { UserId = Guid.Empty, Id = updateTopicModel.Id, Name = updateTopicModel.Name, Content = updateTopicModel.Content });
+            { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name, Content = updateTopicModel.Content });
             return NoContent();
         }
         /// <summary>

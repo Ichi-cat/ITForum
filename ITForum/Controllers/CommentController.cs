@@ -35,7 +35,7 @@ namespace ITForum.Api.Controllers
         {
             Guid id = await Mediator.Send(new CreateCommentCommand
             {
-                UserId = Guid.Empty,
+                UserId = UserId,
                 Content = model.Content,
                 CommId = model.CommId,
                 TopicId=model.TopicId
