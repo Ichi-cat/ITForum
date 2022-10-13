@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Comments.Commands.DeleteComment
 {
-    internal class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand>
+    public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand>
     {
         private readonly IItForumDbContext _context;
         public DeleteCommentCommandHandler(IItForumDbContext context)

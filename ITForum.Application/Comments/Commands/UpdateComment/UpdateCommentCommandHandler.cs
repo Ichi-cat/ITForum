@@ -11,7 +11,7 @@ using ITForum.Application.Common.Exceptions;
 
 namespace ITForum.Application.Comments.Commands.UpdateComment
 {
-    internal class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand>
+    public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand>
     {
         private readonly IItForumDbContext _context;
         public UpdateCommentCommandHandler(IItForumDbContext context)

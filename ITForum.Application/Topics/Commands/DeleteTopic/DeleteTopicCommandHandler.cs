@@ -5,7 +5,7 @@ using ITForum.Domain.TopicItems;
 
 namespace ITForum.Application.Topics.Commands.DeleteTopic
 {
-    internal class DeleteTopicCommandHandler
+    public class DeleteTopicCommandHandler
         : IRequestHandler<DeleteTopicCommand>
     {
         private readonly IItForumDbContext _context;

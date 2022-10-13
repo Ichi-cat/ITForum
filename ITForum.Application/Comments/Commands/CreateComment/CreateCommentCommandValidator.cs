@@ -12,8 +12,8 @@ namespace ITForum.Application.Comments.Commands.CreateComment
                 .MaximumLength(500);
             RuleFor(createCommentCommand => createCommentCommand.UserId)
                 .NotEqual(Guid.Empty);
-            RuleFor(createCommentCommand => createCommentCommand.CommId)
-                .NotEqual(Guid.Empty);
+            //RuleFor(createCommentCommand => createCommentCommand.CommId)
+            //    .NotEqual(Guid.Empty);
         }
     }
 }
