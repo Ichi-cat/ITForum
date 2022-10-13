@@ -29,7 +29,3 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
       run: dotnet test .
-    - name: PWD
-      run: pwd
-    - name: LS
-      run: ls
