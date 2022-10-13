@@ -1,5 +1,4 @@
-﻿using ITForum.Api.Models.Auth;
-using ITForum.Persistance.TempEntities;
+﻿using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

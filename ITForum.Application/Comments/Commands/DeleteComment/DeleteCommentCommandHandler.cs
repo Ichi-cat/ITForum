@@ -2,11 +2,6 @@
 using ITForum.Application.Interfaces;
 using ITForum.Domain.TopicItems;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITForum.Application.Comments.Commands.DeleteComment
 {

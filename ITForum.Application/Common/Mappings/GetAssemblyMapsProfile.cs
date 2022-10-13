@@ -1,4 +1,5 @@
-﻿ using AutoMapper;
+﻿using AutoMapper;
+using ITForum.Application.Interfaces;
 using System.Reflection;
 
 namespace ITForum.Application.Common.Mappings
@@ -15,7 +16,6 @@ namespace ITForum.Application.Common.Mappings
             {
                 dynamic instance = Activator.CreateInstance(type);
                 instance.Mapping(this);
-                //type.GetMethod("Mapping").Invoke(instance, new[] {this} );
             });
         }
     }

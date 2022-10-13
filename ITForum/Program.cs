@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using ITForum.Application.Topics.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Text;
 using NLog.Web;
 using ITForum.Api.Middleware;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
-using ITForum.Persistance.TempEntities;
+using ITForum.Application.Services;
+using ITForum.Domain.ItForumUser;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -364,3 +364,5 @@ FodyWeavers.xsd
 /ITForum/ITForum.db
 /ITForum/ITForum.db-shm
 /ITForum/ITForum.db-wal
+
+/ITForum/UploadedFiles/

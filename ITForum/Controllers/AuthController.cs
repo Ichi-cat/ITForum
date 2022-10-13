@@ -1,8 +1,8 @@
 ﻿using ITForum.Api.Models.Auth;
+using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
-using ITForum.Domain.Errors;
-using ITForum.Domain.Errors.Generals;
-using ITForum.Persistance.TempEntities;
+using ITForum.Application.Common.Exceptions.Generals;
+using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

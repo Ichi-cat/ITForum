@@ -1,5 +1,5 @@
 ﻿using ITForum.Application.Interfaces;
-using ITForum.Persistance.TempEntities;
+using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ITForum.Api.Models.Auth;
+using ITForum.Domain.ItForumUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
