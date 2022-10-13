@@ -16,6 +16,7 @@ namespace ITForum.Tests.Common
         public static Guid UserBId = Guid.NewGuid();
         public static Guid TopicIdForDelete = Guid.NewGuid();
         public static Guid TopicIdForUpdate = Guid.NewGuid();
+        public static Guid TopicIdForComment = Guid.NewGuid();
         public static ItForumDbContext Create()
         {
             var options = new DbContextOptionsBuilder<ItForumDbContext>()
@@ -62,6 +63,17 @@ namespace ITForum.Tests.Common
                     Id = TopicIdForUpdate,
                     Name = "Name4",
                     Content="Content4",
+                    Attachments = { },
+                    Comment = { },
+                    Created = DateTime.Now
+                },
+                new Topic
+                {
+
+                    UserId = UserAId,
+                    Id = TopicIdForComment,
+                    Name = "Name5",
+                    Content = "Content5",
                     Attachments = { },
                     Comment = { },
                     Created = DateTime.Now
