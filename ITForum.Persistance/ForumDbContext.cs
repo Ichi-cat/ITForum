@@ -2,8 +2,7 @@
 using ITForum.Domain.TopicItems;
 using ITForum.Application.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using ITForum.Persistance.TempEntities;
+using ITForum.Domain.ItForumUser;
 
 namespace ITForum.Persistance
 {

@@ -1,12 +1,11 @@
-﻿using ITForum.Application.Interfaces;
+﻿using ITForum.Application.Common.Exceptions.Generals;
+using ITForum.Application.Interfaces;
 using ITForum.Controllers;
-using ITForum.Domain.Errors.Generals;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ITForum.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class UploadFilesController : BaseController
     {

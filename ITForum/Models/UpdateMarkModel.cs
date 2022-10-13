@@ -1,5 +1,4 @@
-﻿using ITForum.Domain.TopicItems;
-using static ITForum.Domain.TopicItems.Mark;
+﻿using ITForum.Domain.Enums;
 
 namespace ITForum.Api.Models
 {

@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITForum.Application.Comments.Commands.UpdateComment
 {
@@ -15,6 +10,7 @@ namespace ITForum.Application.Comments.Commands.UpdateComment
                 .NotEqual(Guid.Empty);
             RuleFor(updateCommentCommand => updateCommentCommand.Content)
                 .NotEmpty()
+                .NotNull()
                 .MaximumLength(500);
             RuleFor(updateCommentCommand => updateCommentCommand.UserId)
                 .NotEqual(Guid.Empty);

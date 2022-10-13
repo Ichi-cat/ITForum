@@ -2,18 +2,12 @@ using ITForum.Api.Models;
 using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Commands.DeleteTopic;
 using ITForum.Application.Topics.Commands.UpdateTopic;
-using ITForum.Api.Controllers;
-using ITForum.Api.Models.Auth;
-using ITForum.Application.Topics.Queries.GetMyTopicListCommand;
-using ITForum.Application.Topics.Queries.GetTopicDetailsByIdQuery;
+using ITForum.Application.Topics.Queries.GetTopicDetailsById;
 using ITForum.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ITForum.Application.Topics.Services.LikesAndDislikes;
-using ITForum.Domain.TopicItems;
 using Swashbuckle.AspNetCore.Annotations;
-using ITForum.Domain.Errors.Generals;
-using System.Collections;
+using ITForum.Application.Common.Exceptions.Generals;
+using ITForum.Application.Topics.Queries.GetMyTopicList;
 
 namespace ITForum.Controllers
 {

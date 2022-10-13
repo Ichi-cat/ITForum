@@ -3,10 +3,9 @@ using ITForum.Application.Comments.Commands.CreateComment;
 using ITForum.Application.Comments.Commands.UpdateComment;
 using ITForum.Application.Comments.Commands.DeleteComment;
 using ITForum.Controllers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ITForum.Domain.Errors.Generals;
 using Swashbuckle.AspNetCore.Annotations;
+using ITForum.Application.Common.Exceptions.Generals;
 
 namespace ITForum.Api.Controllers
 {

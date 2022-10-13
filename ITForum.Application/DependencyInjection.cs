@@ -1,5 +1,4 @@
-﻿using ITForum.Application.Common.Logging;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;

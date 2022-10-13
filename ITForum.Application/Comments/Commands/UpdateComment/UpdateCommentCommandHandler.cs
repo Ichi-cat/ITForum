@@ -1,12 +1,7 @@
 ﻿using ITForum.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using ITForum.Domain.TopicItems;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ITForum.Application.Common.Exceptions;
 
 namespace ITForum.Application.Comments.Commands.UpdateComment

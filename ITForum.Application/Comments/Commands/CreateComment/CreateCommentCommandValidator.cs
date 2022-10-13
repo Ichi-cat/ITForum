@@ -8,12 +8,13 @@ namespace ITForum.Application.Comments.Commands.CreateComment
         public CreateCommentCommandValidator()
         {
             RuleFor(createCommentCommand => createCommentCommand.Content)
+                .NotNull()
                 .NotEmpty()
                 .MaximumLength(500);
             RuleFor(createCommentCommand => createCommentCommand.UserId)
                 .NotEqual(Guid.Empty);
-            //RuleFor(createCommentCommand => createCommentCommand.CommId)
-            //    .NotEqual(Guid.Empty);
+            RuleFor(createCommentCommand => createCommentCommand.TopicId)
+                .NotEqual(Guid.Empty);
         }
     }
 }

@@ -2,8 +2,7 @@
 using System.Text.Json;
 using ITForum.Application.Common.Exceptions;
 using FluentValidation;
-using ITForum.Domain.Errors.Generals;
-using ITForum.Domain.Errors;
+using ITForum.Application.Common.Exceptions.Generals;
 
 namespace ITForum.Api.Middleware
 {
