@@ -55,12 +55,12 @@ namespace ITForum.Tests.Topics.Commands
             // Arrange
             var deleteHandler = new DeleteTopicCommandHandler(Context);
             var createHandler = new CreateTopicCommandHandler(Context);
-            var noteId = await createHandler.Handle(
-                new CreateTopicCommand
-                {
-                    Name = "TopicName",
-                    UserId = TopicContextFactory.UserAId
-                }, CancellationToken.None);
+            //var noteId = await createHandler.Handle(
+            //    new CreateTopicCommand
+            //    {
+            //        Name = "TopicName",
+            //        UserId = TopicContextFactory.UserAId
+            //    }, CancellationToken.None);
 
             // Act
             // Assert
@@ -68,7 +68,7 @@ namespace ITForum.Tests.Topics.Commands
                 await deleteHandler.Handle(
                     new DeleteTopicCommand
                     {
-                        Id = noteId,
+                        Id = TopicContextFactory.TopicIdForDelete,
                         UserId = TopicContextFactory.UserBId
                     }, CancellationToken.None));
         }

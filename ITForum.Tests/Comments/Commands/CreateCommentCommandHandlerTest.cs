@@ -18,18 +18,20 @@ namespace ITForum.Tests.Comments.Commands
             var handler = new CreateCommentCommandHandler(Context);
             var commContent = "topic content";
 
-            var topicId = await handler.Handle(
+            var commentId = await handler.Handle(
                 new CreateCommentCommand
                 {
                     Content = commContent,
-                    UserId = TopicContextFactory.UserAId,
-                    TopicId = Context.Topics.FirstOrDefault().Id
+                    UserId = CommandContextFactory.UserAId,
+                    TopicId = TopicContextFactory.TopicIdForComment
                 }, CancellationToken.None);
 
-            Assert.NotNull(
-                await Context.Comments.SingleOrDefaultAsync(comm =>
+            var x = await Context.Comments.SingleOrDefaultAsync(comm =>
                 comm.UserId == CommandContextFactory.UserAId &&
-                comm.Content == commContent)
+                comm.Content == commContent);
+            var c = Context.Comments.ToList();
+            Assert.NotNull(
+                x
                 );
         }
     }

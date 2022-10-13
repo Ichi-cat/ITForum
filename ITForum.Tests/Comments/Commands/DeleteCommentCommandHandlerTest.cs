@@ -17,13 +17,13 @@ namespace ITForum.Tests.Comments.Commands
             // Act
             await handler.Handle(new DeleteCommentCommand
             {
-                Id = TopicContextFactory.TopicIdForDelete,
+                Id = TopicContextFactory.CommIdForDelete,
                 UserId = TopicContextFactory.UserAId
             }, CancellationToken.None);
 
             // Assert
             Assert.Null(Context.Topics.SingleOrDefault(note =>
-                note.Id == TopicContextFactory.TopicIdForDelete));
+                note.Id == TopicContextFactory.CommIdForDelete));
         }
 
         [Fact]

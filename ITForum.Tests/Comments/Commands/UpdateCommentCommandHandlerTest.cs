@@ -23,15 +23,15 @@ namespace ITForum.Tests.Comments.Commands
             // Act
             await handler.Handle(new UpdateCommentCommand
             {
-                Id = TopicContextFactory.TopicIdForUpdate,
+                Id = TopicContextFactory.CommIdForUpdate,
                 UserId = TopicContextFactory.UserBId,
                 Content = updatedContent
             }, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(await Context.Topics.SingleOrDefaultAsync(note =>
-                note.Id == TopicContextFactory.TopicIdForUpdate &&
-                note.Name == updatedContent));
+            Assert.NotNull(await Context.Comments.SingleOrDefaultAsync(note =>
+                note.Id == TopicContextFactory.CommIdForUpdate &&
+                note.Content == updatedContent));
         }
 
         [Fact]
