@@ -11,7 +11,7 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
         public Guid UserId { get; set; }
         public string Name { get; set; }
         public string Content { get; set; }
-        public List<Attachment> Attachments { get; set; }
+        public Guid AttachmentId { get; set; }
+        public List<Guid> AttachmentsUrl { get; set; }
     }
-
 }

@@ -1,7 +1,7 @@
 ﻿using ITForum.Application.Interfaces;
 using ITForum.Domain.TopicItems;
 using MediatR;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Topics.Commands.CreateTopic
 {
@@ -22,7 +22,6 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
             {
                 Name = request.Name,
                 Content = request.Content,
-                Attachments = request.Attachments,
                 Id = Guid.NewGuid(),
                 UserId = request.UserId
             };

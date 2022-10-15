@@ -8,11 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Topics.Commands.UploadAttachments;
 
 namespace ITForum.Controllers
 {
     public class TopicController : BaseController
     {
+        readonly IBufferedFileUploadService _bufferedFileUploadService;
+        public TopicController(IBufferedFileUploadService bufferedFileUploadService)
+        {
+            _bufferedFileUploadService = bufferedFileUploadService;
+        }
         /// <summary>
         /// Get topic by id
         /// </summary>
@@ -138,6 +145,14 @@ namespace ITForum.Controllers
         {
             await Mediator.Send(new DeleteTopicCommand { UserId = UserId, Id = id });
             return NoContent();
+        }
+        [HttpPost("upload")]
+        public async Task<ActionResult<List<string>>> AddAttachmentsOnServer(IFormFile[] files)
+        {
+            var resultUrl = await _bufferedFileUploadService.UploadFiles(files);
+            var id = await Mediator.Send(new UploadAttachmentsCommand { AttachmentsUrl = resultUrl, UserId = UserId });
+            // TODO: attach to topic
+            return Ok(id);
         }
     }
 }

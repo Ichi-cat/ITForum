@@ -36,6 +36,21 @@ namespace ITForum.Api.Controllers
             { UserId = UserId, TopicId = updateMarkModel.TopicId, IsLiked = updateMarkModel.IsLiked });
             return NoContent();
         }
+        /// <summary>
+        /// Get topic likes count
+        /// </summary>
+        /// ///<remarks>
+        /// Sample request:
+        /// 
+        ///     Put
+        ///     {
+        ///         "topicId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///         "isLiked": 0
+        ///     }
+        ///     
+        /// ///</remarks>
+        /// <param name="topicId"></param>
+        /// <returns></returns>
         [HttpGet("{topicId}")]
         public async Task<ActionResult> GetTopicLikes(Guid topicId)
         {
