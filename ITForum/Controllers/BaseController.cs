@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace ITForum.Controllers
+namespace ITForum.Api.Controllers
 {
     [ApiController]
     [Authorize(Roles = UserRoles.User)]

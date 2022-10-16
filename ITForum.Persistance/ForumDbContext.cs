@@ -12,6 +12,7 @@ namespace ITForum.Persistance
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Mark> Marks { get; set; }
         public DbSet<Topic> Topics { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public ItForumDbContext(DbContextOptions<ItForumDbContext> options) : base(options)
         {
             Database.EnsureCreated();

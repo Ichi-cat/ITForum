@@ -1,6 +1,5 @@
 ﻿using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Interfaces;
-using ITForum.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
