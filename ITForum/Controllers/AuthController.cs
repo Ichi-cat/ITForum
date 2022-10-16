@@ -119,12 +119,6 @@ namespace ITForum.Api.Controllers
                 throw e;
                 //todo: process identityerror or create new error
             }
-            //todo: add base roles creating
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new ItForumRole(UserRoles.Admin));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-                await _roleManager.CreateAsync(new ItForumRole(UserRoles.User));
-            ///////////////
             if (await _roleManager.RoleExistsAsync(UserRoles.User))
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
