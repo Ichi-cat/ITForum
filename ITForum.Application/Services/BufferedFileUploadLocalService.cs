@@ -6,7 +6,7 @@ namespace ITForum.Application.Services
 {
     public class BufferedFileUploadLocalService : IBufferedFileUploadService
     {
-        public async Task<bool> UploadFiles(IFormFile file)
+        public async Task<List<string>> UploadFiles(IFormFile[] file)
         {
             string path = "";
             try
@@ -18,15 +18,26 @@ namespace ITForum.Application.Services
                     {
                         Directory.CreateDirectory(path);
                     }
-                    using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
+                    
+                    List<string> resultUrl = new();
+                    
+                    foreach (var formFile in file)
                     {
-                        await file.CopyToAsync(fileStream);
+                        if (formFile.Length > 0)
+                        {
+                            var filePath = Path.Combine(path, formFile.FileName);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await formFile.CopyToAsync(stream);
+                            }
+                            resultUrl.Add(formFile.FileName);
+                        }
                     }
-                    return true;
+                    return resultUrl;
                 }
                 else
                 {
-                    return false;
+                    throw new Exception(); // TODO: Create custom exception
                 }
             }
             catch (Exception ex)

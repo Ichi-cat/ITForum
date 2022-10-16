@@ -9,7 +9,9 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
     {
         public string Name { get; set; }
         public string Content { get; set; }
-        public List<Attachment> Attachment { get; set; }
+        public List<Attachment> Attachments { get; set; } // TODO: Запилить вывод через attachmentVm
+        public int LikeCount { get; set; }
+        public int DislikeCount { get; set; }
 
         public void Mapping(Profile profile)
         {
