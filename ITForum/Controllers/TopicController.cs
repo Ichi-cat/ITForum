@@ -3,13 +3,12 @@ using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Commands.DeleteTopic;
 using ITForum.Application.Topics.Commands.UpdateTopic;
 using ITForum.Application.Topics.Queries.GetTopicDetailsById;
-using ITForum.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
 
-namespace ITForum.Controllers
+namespace ITForum.Api.Controllers
 {
     public class TopicController : BaseController
     {
