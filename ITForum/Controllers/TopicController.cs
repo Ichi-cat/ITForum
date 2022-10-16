@@ -122,7 +122,7 @@ namespace ITForum.Controllers
         {
             await Mediator.Send(new UpdateTopicCommand
             { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name,
-                Content = updateTopicModel.Content, /*AttachmentsId = updateTopicModel.AttachmentsId*/ });
+                Content = updateTopicModel.Content, AttachmentsId = updateTopicModel.AttachmentsId });
             return NoContent();
         }
         /// <summary>
