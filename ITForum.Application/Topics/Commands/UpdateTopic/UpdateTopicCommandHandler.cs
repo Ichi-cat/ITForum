@@ -31,10 +31,11 @@ namespace ITForum.Application.Topics.Commands.UpdateTopic
             entity.Name = request.Name;
             entity.Content = request.Content;
             entity.EditDate = DateTime.Now;
+            entity.AttachmentsId = request.AttachmentsId; // not required field
 
             await _context.SaveChangesAsync(cancellationToken);
 
-                return Unit.Value;
+            return Unit.Value;
         }
     }
 }

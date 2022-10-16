@@ -90,7 +90,7 @@ namespace ITForum.Controllers
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
-            { UserId = UserId, Name = model.Name, Content = model.Content });
+            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId });
             return Ok(id);
         }
         /// <summary>
@@ -121,7 +121,7 @@ namespace ITForum.Controllers
         public async Task<ActionResult> UpdateTopic(UpdateTopicModel updateTopicModel)
         {
             await Mediator.Send(new UpdateTopicCommand
-            { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name, Content = updateTopicModel.Content });
+            { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name, Content = updateTopicModel.Content, AttachmentsId = updateTopicModel.AttachmentsId });
             return NoContent();
         }
         /// <summary>
@@ -147,7 +147,7 @@ namespace ITForum.Controllers
             return NoContent();
         }
         [HttpPost("upload")]
-        public async Task<ActionResult<List<string>>> AddAttachmentsOnServer(IFormFile[] files)
+        public async Task<ActionResult<List<string>>> UploadAttachmentsOnServer(IFormFile[] files)
         {
             var resultUrl = await _bufferedFileUploadService.UploadFiles(files);
             var id = await Mediator.Send(new UploadAttachmentsCommand { AttachmentsUrl = resultUrl, UserId = UserId });

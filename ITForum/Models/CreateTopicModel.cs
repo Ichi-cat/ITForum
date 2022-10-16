@@ -4,6 +4,6 @@
     {
         public string Name { get; set; }
         public string Content { get; set; }
-        public Guid AttachmentId { get; set; }
+        public List<Guid> AttachmentsId { get; set; }
     }
 }
