@@ -25,6 +25,10 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
                 Id = Guid.NewGuid(),
                 UserId = request.UserId
             };
+            await _context.Attachments.Where(attachment => request.AttachmentsId
+                .Contains(attachment.Id))
+                    .ForEachAsync(attachment => attachment.TopicId = topic.Id);
+
             await _context.Topics.AddAsync(topic);
             await _context.SaveChangesAsync();
             return topic.Id;
