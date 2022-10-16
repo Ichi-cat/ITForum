@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Topics.Commands.UploadAttachments;
 
 namespace ITForum.Api.Controllers
 {
     public class TopicController : BaseController
     {
+        readonly IBufferedFileUploadService _bufferedFileUploadService;
+        public TopicController(IBufferedFileUploadService bufferedFileUploadService)
+        {
+            _bufferedFileUploadService = bufferedFileUploadService;
+        }
         /// <summary>
         /// Get topic by id
         /// </summary>
@@ -82,7 +89,7 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
-            { UserId = UserId, Name = model.Name, Content = model.Content });
+            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId });
             return Ok(id);
         }
         /// <summary>
@@ -113,7 +120,8 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> UpdateTopic(UpdateTopicModel updateTopicModel)
         {
             await Mediator.Send(new UpdateTopicCommand
-            { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name, Content = updateTopicModel.Content });
+            { UserId = UserId, Id = updateTopicModel.Id, Name = updateTopicModel.Name,
+                Content = updateTopicModel.Content, AttachmentsId = updateTopicModel.AttachmentsId });
             return NoContent();
         }
         /// <summary>
@@ -137,6 +145,14 @@ namespace ITForum.Api.Controllers
         {
             await Mediator.Send(new DeleteTopicCommand { UserId = UserId, Id = id });
             return NoContent();
+        }
+        [HttpPost("upload")]
+        public async Task<ActionResult<List<Guid>>> UploadAttachmentsOnServer(IFormFile[] files)
+        {
+            var resultUrl = await _bufferedFileUploadService.UploadFiles(files);
+            var id = await Mediator.Send(new UploadAttachmentsCommand { AttachmentsUrl = resultUrl, UserId = UserId });
+            // TODO: attach to topic
+            return Ok(id);
         }
     }
 }

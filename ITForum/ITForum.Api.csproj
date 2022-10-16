@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UploadedFiles\" />
+    <Folder Include="UploadedFiles\NewFolder\" />
   </ItemGroup>
 
 </Project>
