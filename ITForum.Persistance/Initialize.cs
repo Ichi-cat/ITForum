@@ -10,13 +10,17 @@ namespace ITForum.Persistance
 {
     public static class Initialize
     {
-        public static void Initial(ItForumDbContext context)
+        public static async Task Initial(ItForumDbContext context, UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager)
         {
-
+            //ask
+            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                await roleManager.CreateAsync(new ItForumRole(UserRoles.Admin));
+            if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                await roleManager.CreateAsync(new ItForumRole(UserRoles.User));
         }
         public static async Task CreateTestUser(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager)
         {
-            if (userManager.FindByNameAsync(TestUser.name).GetAwaiter().GetResult() == null)
+            if (await userManager.FindByNameAsync(TestUser.name) == null)
             {
                 ItForumUser user = new ItForumUser
                 {
@@ -25,10 +29,6 @@ namespace ITForum.Persistance
                     UserName = TestUser.name
                 };
                 var result = await userManager.CreateAsync(user, TestUser.password);
-                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-                    await roleManager.CreateAsync(new ItForumRole(UserRoles.Admin));
-                if (!await roleManager.RoleExistsAsync(UserRoles.User))
-                    await roleManager.CreateAsync(new ItForumRole(UserRoles.User));
                 
                 if (await roleManager.RoleExistsAsync(UserRoles.User))
                 {

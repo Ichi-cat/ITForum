@@ -117,10 +117,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ItForumDbContext>();
     var userManager = services.GetRequiredService<UserManager<ItForumUser>>();
     var roleManager = services.GetRequiredService<RoleManager<ItForumRole>>();
     try
     {
+        await Initialize.Initial(context, userManager, roleManager);
         await Initialize.CreateTestUser(userManager, roleManager);
     }
     catch (Exception ex) { }
