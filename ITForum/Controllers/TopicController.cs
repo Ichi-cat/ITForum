@@ -3,16 +3,38 @@ using ITForum.Application.Topics.Commands.CreateTopic;
 using ITForum.Application.Topics.Commands.DeleteTopic;
 using ITForum.Application.Topics.Commands.UpdateTopic;
 using ITForum.Application.Topics.Queries.GetTopicDetailsById;
-using ITForum.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
+using ITForum.Domain.TopicItems;
+using ITForum.Application.Topics.Queries.GetTopicListByTag;
 
-namespace ITForum.Controllers
+namespace ITForum.Api.Controllers
 {
     public class TopicController : BaseController
     {
+        /// <summary>
+        /// Get topic list
+        /// </summary>
+        /// /// <remarks>
+        /// Sample request:
+        /// 
+        ///     Get
+        ///     /tag?string=string
+        ///     
+        /// </remarks>
+        /// <param name="count">Int32</param>
+        /// <returns>Returns TopicListVm</returns>
+        [SwaggerResponse(200, type: typeof(TopicListVm))]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TopicItemVm>>> GetTopicListByTag(int page, int pageSize, Tag tag)
+        {
+            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tag.Name, Page = page, PageSize = pageSize });
+            return Ok(topics.Topics);
+        }
         /// <summary>
         /// Get topic by id
         /// </summary>

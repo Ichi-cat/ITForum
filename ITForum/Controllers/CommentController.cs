@@ -2,7 +2,6 @@
 using ITForum.Application.Comments.Commands.CreateComment;
 using ITForum.Application.Comments.Commands.UpdateComment;
 using ITForum.Application.Comments.Commands.DeleteComment;
-using ITForum.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
