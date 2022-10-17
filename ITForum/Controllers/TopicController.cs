@@ -6,9 +6,11 @@ using ITForum.Application.Topics.Queries.GetTopicDetailsById;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
-using ITForum.Application.Topics.Queries.GetMyTopicList;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Topics.Commands.UploadAttachments;
+using ITForum.Application.Topics.Queries.GetTopicListByTag;
+using ITForum.Domain.TopicItems;
+using ITForum.Application.Topics.Queries.GetMyTopicList;
 
 namespace ITForum.Api.Controllers
 {
@@ -18,6 +20,27 @@ namespace ITForum.Api.Controllers
         public TopicController(IBufferedFileUploadService bufferedFileUploadService)
         {
             _bufferedFileUploadService = bufferedFileUploadService;
+        }
+        /// <summary>
+        /// Get topic list
+        /// </summary>
+        /// /// <remarks>
+        /// Sample request:
+        /// 
+        ///     Get
+        ///     /tag?string=string
+        ///     
+        /// </remarks>
+        /// <param name="count">Int32</param>
+        /// <returns>Returns TopicListVm</returns>
+        [SwaggerResponse(200, type: typeof(TopicListVM))]
+        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [SwaggerResponse(401)]
+        [HttpGet("ByTag")]
+        public async Task<ActionResult<IEnumerable<TopicVM>>> GetTopicListByTag(int page, int pageSize, Tag tag)
+        {
+            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tag.Name, Page = page, PageSize = pageSize });
+            return Ok(topics.Topics);
         }
         /// <summary>
         /// Get topic by id
