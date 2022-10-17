@@ -1,7 +1,7 @@
 ﻿using ITForum.Application.Interfaces;
 using ITForum.Domain.TopicItems;
 using MediatR;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace ITForum.Application.Topics.Commands.CreateTopic
 {
@@ -22,10 +22,13 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
             {
                 Name = request.Name,
                 Content = request.Content,
-                Attachments = request.Attachments,
                 Id = Guid.NewGuid(),
                 UserId = request.UserId
             };
+            await _context.Attachments.Where(attachment => request.AttachmentsId
+                .Contains(attachment.Id))
+                    .ForEachAsync(attachment => attachment.TopicId = topic.Id);
+
             await _context.Topics.AddAsync(topic);
             await _context.SaveChangesAsync();
             return topic.Id;

@@ -4,6 +4,6 @@ namespace ITForum.Application.Interfaces
 {
     public interface IBufferedFileUploadService
     {
-        Task<bool> UploadFiles(IFormFile file);
+        Task<List<string>> UploadFiles(IFormFile[] file);
     }
 }
