@@ -70,9 +70,9 @@ namespace ITForum.Persistance
     }
     public static class TestUser
     {
-        public static Guid id = Guid.Parse("57604FA6-E890-472E-A224-1259DBE4C950");
-        public static string email = "kentMisha@gmail.com";
-        public static string name = "kentMisha";
+        public static Guid id = Guid.Parse("65AA4F89-DEBE-4A65-AEC0-AA67D6A51612");
+        public static string email = "mihail@gmail.com";
+        public static string name = "mihail";
         public static string password = "PaSSword123@dsa-555";
     }
 }
