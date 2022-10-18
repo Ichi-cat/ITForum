@@ -26,7 +26,9 @@ namespace ITForum.Persistance
                 {
                     Id = TestUser.id,
                     Email = TestUser.email,
-                    UserName = TestUser.name
+                    UserName = TestUser.name,
+                    Description = TestUser.description,
+                    Avatar = TestUser.avatar
                 };
                 var result = await userManager.CreateAsync(user, TestUser.password);
                 
@@ -74,5 +76,7 @@ namespace ITForum.Persistance
         public static string email = "mihail@gmail.com";
         public static string name = "mihail";
         public static string password = "PaSSword123@dsa-555";
+        public static string description = "I am a test user and i don't have a soul. But i can think, so i am not a robot. I guess you're cute";
+        public static string avatar = "https://avatars.githubusercontent.com/u/43109462?v=4";
     }
 }

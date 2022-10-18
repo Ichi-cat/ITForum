@@ -5,12 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UploadedFiles\NewFolder\**" />
     <Compile Remove="wwwroot\**" />
+    <Content Remove="UploadedFiles\NewFolder\**" />
     <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="UploadedFiles\NewFolder\**" />
     <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="UploadedFiles\NewFolder\**" />
     <None Remove="wwwroot\**" />
   </ItemGroup>
 
@@ -30,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UploadedFiles\NewFolder\" />
+    <Folder Include="UploadedFiles\" />
   </ItemGroup>
 
 </Project>

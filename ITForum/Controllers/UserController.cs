@@ -19,16 +19,24 @@ namespace ITForum.Api.Controllers
         /// Get user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [HttpGet]
-        public async Task<ActionResult<UserInfoVm>> GetUserInfo()
+        [HttpGet()]
+        public async Task<ActionResult<UserInfoVm>> GetShortUserInfo()
         {
             var user = await _userManager.FindByIdAsync(UserId.ToString());
-            return new UserInfoVm
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                Roles = await _userManager.GetRolesAsync(user)
-            };
+            var userInfo = Mapper.Map<UserInfoVm>(user);
+            userInfo.Roles = await _userManager.GetRolesAsync(user);
+            return userInfo;
+        }
+        /// <summary>
+        /// Get full user info
+        /// </summary>
+        /// <returns>Returns UserVm</returns>
+        [HttpGet("FullInfo")]
+        public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo()
+        {
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            var userInfo = Mapper.Map<FullUserInfoVm>(user);
+            return userInfo;
         }
     }
 }

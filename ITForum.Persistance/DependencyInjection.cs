@@ -12,9 +12,15 @@ namespace ITForum.Persistance
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration configuration)
         {
             var connectingString = configuration["DbConnection"];
+            var authConnectionString = configuration["AuthDbConnection"];
             services.AddDbContext<IItForumDbContext, ItForumDbContext>(options =>
             {
                 options.UseSqlite(connectingString);
+                options.EnableSensitiveDataLogging();
+            });
+            services.AddDbContext<AuthDbContext>(options =>
+            {
+                options.UseSqlite(authConnectionString);
                 options.EnableSensitiveDataLogging();
             });
 
@@ -30,7 +36,7 @@ namespace ITForum.Persistance
                     RequireUppercase = false
                 };
             })
-                .AddEntityFrameworkStores<ItForumDbContext>()
+                .AddEntityFrameworkStores<AuthDbContext>()
                 .AddDefaultTokenProviders();
             
             return services;
