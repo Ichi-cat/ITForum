@@ -1,4 +1,5 @@
-﻿using ITForum.Api.ViewModels;
+﻿using ITForum.Api.Models;
+using ITForum.Api.ViewModels;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,16 @@ namespace ITForum.Api.Controllers
             var user = await _userManager.FindByIdAsync(UserId.ToString());
             var userInfo = Mapper.Map<FullUserInfoVm>(user);
             return userInfo;
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserInfo(UpdateUserInfoModel userInfo)
+        {
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            user.FirstName = userInfo.FirstName;
+            user.LastName = userInfo.LastName;
+            user.Description = userInfo.Description;
+            await _userManager.UpdateAsync(user);
+            return Ok();
         }
     }
 }
