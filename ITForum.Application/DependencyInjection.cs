@@ -17,6 +17,7 @@ namespace ITForum.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>));
             services.AddTransient<IFacebookAuthentication, FacebookAuthentication>();
+            services.AddTransient<IGitHubAuthentication, GitHubAuthentication>();
             return services;
         }
     }

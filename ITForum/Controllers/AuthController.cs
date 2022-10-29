@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ITForum.Application.Interfaces;
+using ITForum.Application.Services;
 
 namespace ITForum.Api.Controllers
 {
@@ -21,18 +22,21 @@ namespace ITForum.Api.Controllers
         private readonly UserManager<ItForumUser> _userManager;
         private readonly RoleManager<ItForumRole> _roleManager;
         private readonly IFacebookAuthentication _facebookAuthentication;
+        private readonly IGitHubAuthentication _gitHubAuthentication;
         
 
         public AuthController(
             IConfiguration configuration,
             UserManager<ItForumUser> userManager,
             RoleManager<ItForumRole> roleManager,
-            IFacebookAuthentication facebookAuthentication)
+            IFacebookAuthentication facebookAuthentication,
+            IGitHubAuthentication gitHubAuthentication)
         {
             _configuration = configuration;
             _userManager = userManager;
             _roleManager = roleManager;
             _facebookAuthentication = facebookAuthentication;
+            _gitHubAuthentication = gitHubAuthentication;
         }
         /// <summary>
         /// Login action
@@ -151,9 +155,9 @@ namespace ITForum.Api.Controllers
             });
         }
         [HttpPost("facebook")]
-        public async Task<IActionResult> SignInFacebookAsync(string token)
+        public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token)
         {
-            //_userManager.AddLoginAsync(new ItForumUser(), new UserLoginInfo("asdqwe", "asd", "asd"));
+            //add error processing
             var fbTokenValidation = await _facebookAuthentication.ValidateToken(token);
             if (!fbTokenValidation.Data.IsValid)
             {
@@ -179,6 +183,54 @@ namespace ITForum.Api.Controllers
                 await _userManager.AddLoginAsync(user, new UserLoginInfo("Facebook", userInformation.Id, "Facebook"));
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+            };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            //todo: need refactoring
+            var jwtToken = JwtTokenGenerator(claims);
+            return Ok(new TokenVm
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                Expiration = jwtToken.ValidTo
+            });
+        }
+        [HttpPost("github")]
+        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code)
+        {
+            //add error processing
+            //code is expired
+            var access_token = await _gitHubAuthentication.GetAccessToken(code);
+            var userInformation = await _gitHubAuthentication.GetUserInformation(access_token.Token);
+            var user = await _userManager.FindByLoginAsync("GitHub", userInformation.Id.ToString());
+            if (user == null)
+            {
+                user = new ItForumUser
+                {
+                    Email = userInformation.Email ??
+                        (await _gitHubAuthentication.GetUserEmails(access_token.Token)).FirstOrDefault(email => email.Primary)?.Email
+                        ?? "",
+                    UserName = userInformation.Login.Trim().Replace(" ", "_")
+                };
+                //add username duplication verification
+                var succ = await _userManager.CreateAsync(user);
+                if (!succ.Succeeded)
+                {
+                    //create exception if user is not created
+                    throw new Exception("Something went wrong");
+                }
+                await _userManager.AddLoginAsync(user, new UserLoginInfo("GitHub", userInformation.Id.ToString(), "GitHub"));
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            }
+
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Email, user.Email),
