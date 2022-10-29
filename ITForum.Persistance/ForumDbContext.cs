@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ITForum.Domain.TopicItems;
 using ITForum.Application.Interfaces;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using ITForum.Domain.ItForumUser;
 
 namespace ITForum.Persistance
 {
-    public class ItForumDbContext: IdentityDbContext<ItForumUser, ItForumRole, Guid>, IItForumDbContext
+    public class ItForumDbContext: DbContext, IItForumDbContext
     {
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comment> Comments { get; set; }

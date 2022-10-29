@@ -13,6 +13,7 @@ using ITForum.Api.Middleware;
 using Microsoft.AspNetCore.Identity;
 using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddPersistance(builder.Configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
 
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -112,6 +114,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
