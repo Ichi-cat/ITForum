@@ -13,6 +13,7 @@ using ITForum.Api.Middleware;
 using Microsoft.AspNetCore.Identity;
 using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -113,6 +114,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

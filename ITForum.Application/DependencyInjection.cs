@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
 using ITForum.Application.Common.Behaviors;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Services;
 
 namespace ITForum.Application
 {
@@ -14,6 +16,7 @@ namespace ITForum.Application
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>));
+            services.AddTransient<IFacebookAuthentication, FacebookAuthentication>();
             return services;
         }
     }

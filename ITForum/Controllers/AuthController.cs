@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ITForum.Application.Interfaces;
 
 namespace ITForum.Api.Controllers
 {
@@ -19,15 +20,19 @@ namespace ITForum.Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<ItForumUser> _userManager;
         private readonly RoleManager<ItForumRole> _roleManager;
+        private readonly IFacebookAuthentication _facebookAuthentication;
+        
 
         public AuthController(
             IConfiguration configuration,
             UserManager<ItForumUser> userManager,
-            RoleManager<ItForumRole> roleManager)
+            RoleManager<ItForumRole> roleManager,
+            IFacebookAuthentication facebookAuthentication)
         {
             _configuration = configuration;
             _userManager = userManager;
             _roleManager = roleManager;
+            _facebookAuthentication = facebookAuthentication;
         }
         /// <summary>
         /// Login action
@@ -110,6 +115,7 @@ namespace ITForum.Api.Controllers
                 UserName = model.UserName
             };
             var result = await _userManager.CreateAsync(user, model.Password);
+            await _userManager.AddLoginAsync(user, new UserLoginInfo("Faceb", "213123", "Name"));
             
             try
             {
@@ -142,6 +148,55 @@ namespace ITForum.Api.Controllers
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo
+            });
+        }
+        [HttpPost("facebook")]
+        public async Task<IActionResult> SignInFacebookAsync(string token)
+        {
+            //_userManager.AddLoginAsync(new ItForumUser(), new UserLoginInfo("asdqwe", "asd", "asd"));
+            var fbTokenValidation = await _facebookAuthentication.ValidateToken(token);
+            if (!fbTokenValidation.Data.IsValid)
+            {
+                //create exception if token is invalid
+                throw new Exception("Token is not valid");
+            }
+            var userInformation = await _facebookAuthentication.GetUserInformation(token);
+            var user = await _userManager.FindByLoginAsync("Facebook", userInformation.Id);
+            if(user == null)
+            {
+                //let user choose username
+                user = new ItForumUser
+                {
+                    Email = userInformation.Email,
+                    UserName = userInformation.Name.Trim().Replace(" ", "_")
+                };
+                var isSucc = await _userManager.CreateAsync(user);
+                if (!isSucc.Succeeded)
+                {
+                    //create exception if user is not created
+                    throw new Exception("Something went wrong");
+                }
+                await _userManager.AddLoginAsync(user, new UserLoginInfo("Facebook", userInformation.Id, "Facebook"));
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            }
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+            };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            //todo: need refactoring
+            var jwtToken = JwtTokenGenerator(claims);
+            return Ok(new TokenVm
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                Expiration = jwtToken.ValidTo
             });
         }
         [NonAction]
