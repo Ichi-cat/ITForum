@@ -1,28 +1,34 @@
-﻿namespace ITForum.Application.Common.Exceptions.Generals
+﻿using FluentValidation;
+
+namespace ITForum.Application.Common.Exceptions.Generals
 {
     public class GeneralExceptionVm
     {
-        public IList<GeneralExceptionItem> errors { get; private set; } = new List<GeneralExceptionItem>();
-        public GeneralExceptionVm Add(GeneralExceptionItem item)
+        public int Code { get; init; } = 500;
+        public IEnumerable<GeneralExceptionItem> Errors { get; private set; } = null!;
+        public GeneralExceptionVm(int code, string message)
         {
-            errors.Add(item);
-            return this;
+            Code = code;
+            Errors = new List<GeneralExceptionItem> { new GeneralExceptionItem(message) };
         }
-        public GeneralExceptionVm Add(int code, string message)
+        public GeneralExceptionVm(int code, AuthenticationError authenticationError)
         {
-            errors.Add(new GeneralExceptionItem(code, message));
-            return this;
+            Code = code;
+            Errors = authenticationError.Errors.Select(e => new GeneralExceptionItem(e));
+        }
+        public GeneralExceptionVm(int code, ValidationException exception)
+        {
+            Code = code;
+            Errors = new List<GeneralExceptionItem> { new GeneralExceptionItem(exception.Message) };
         }
     }
     public class GeneralExceptionItem
     {
-        public GeneralExceptionItem(int code, string message)
+        public GeneralExceptionItem(string message)
         {
-            Code = code;
             Message = message;
         }
 
-        public int Code { get; init; } = 500;
         public string Message { get; init; } = "Internal server error";
     }
 }
