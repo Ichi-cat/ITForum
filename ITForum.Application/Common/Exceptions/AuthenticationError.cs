@@ -1,14 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ITForum.Application.Common.Exceptions
 {
     public class AuthenticationError : Exception
     {
+        public IEnumerable<string> Errors;
         public AuthenticationError(IEnumerable<IdentityError> identityErrors)
         {
-            this.identityErrors = identityErrors;
+            Errors = identityErrors.Select(error => error.Description);
         }
-        public IEnumerable<IdentityError> identityErrors;
+        public AuthenticationError(IEnumerable<string> errors)
+        {
+            Errors = errors;
+        }
+        public AuthenticationError(IEnumerable<ModelError> errors)
+        {
+            Errors = errors.Select(e => e.ErrorMessage);
+        }
     }
 }
