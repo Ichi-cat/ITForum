@@ -94,7 +94,7 @@ namespace ITForum.Api.Controllers
             });
         }
         [HttpPost("facebook")]
-        public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token)
+        public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token, [FromBody]SignInWithProviderModel model)
         {
             var fbTokenValidation = await _facebookAuthentication.ValidateToken(token);
             if (!fbTokenValidation.Data.IsValid)
@@ -110,8 +110,18 @@ namespace ITForum.Api.Controllers
                 var baseUserInfo = new BaseUserInfoModel()
                 {
                     Email = userInformation.Email,
-                    UserName = userInformation.Name.Trim().Replace(" ", "_")
+                    UserName = userInformation.Name.Trim().Replace(" ", "_"),
+                    IsEmailConfirmed = true
                 };
+                if (model.Email != null)
+                {
+                    baseUserInfo.Email = model.Email;
+                    baseUserInfo.IsEmailConfirmed = false;
+                }
+                if (model.UserName != null)
+                {
+                    baseUserInfo.UserName = model.UserName;
+                }
                 JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
                     new("Facebook", userInformation.Id, "Facebook"),
                     baseUserInfo);
@@ -134,7 +144,7 @@ namespace ITForum.Api.Controllers
         }
 
         [HttpPost("github")]
-        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code)
+        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code, SignInWithProviderModel model)
         {
             //add error processing
             //code is expired
@@ -148,9 +158,18 @@ namespace ITForum.Api.Controllers
                     Email = userInformation.Email ??
                         (await _gitHubAuthentication.GetUserEmails(access_token.Token)).FirstOrDefault(email => email.Primary)?.Email
                         ?? "",
-                    UserName = userInformation.Login.Trim().Replace(" ", "_")
+                    UserName = userInformation.Login.Trim().Replace(" ", "_"),
+                    IsEmailConfirmed = true
                 };
-
+                if (model.Email != null)
+                {
+                    baseUserInfo.Email = model.Email;
+                    baseUserInfo.IsEmailConfirmed = false;
+                }
+                if (model.UserName != null)
+                {
+                    baseUserInfo.UserName = model.UserName;
+                }
                 JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
                     new("GitHub", userInformation.Id.ToString(), "GitHub"),
                     baseUserInfo);
