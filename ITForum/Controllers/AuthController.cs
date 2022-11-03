@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace ITForum.Api.Controllers
 {
@@ -17,15 +18,18 @@ namespace ITForum.Api.Controllers
     {
         private readonly UserManager<ItForumUser> _userManager;
         private readonly IFacebookAuthentication _facebookAuthentication;
+        private readonly IGitHubAuthentication _gitHubAuthentication;
         private readonly IIdentityService _identityService;
 
         public AuthController(
             UserManager<ItForumUser> userManager,
             IFacebookAuthentication facebookAuthentication,
+            IGitHubAuthentication gitHubAuthentication,
             IIdentityService identityService)
         {
             _userManager = userManager;
             _facebookAuthentication = facebookAuthentication;
+            _gitHubAuthentication = gitHubAuthentication;
             _identityService = identityService;
         }
         /// <summary>
@@ -90,7 +94,7 @@ namespace ITForum.Api.Controllers
             });
         }
         [HttpPost("facebook")]
-        public async Task<IActionResult> SignInFacebookAsync(string token)
+        public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token)
         {
             var fbTokenValidation = await _facebookAuthentication.ValidateToken(token);
             if (!fbTokenValidation.Data.IsValid)
@@ -120,7 +124,46 @@ namespace ITForum.Api.Controllers
             else
             {
                 //facebook const
-                JwtSecurityToken jwtToken = await _identityService.Login("Facebook", userInformation.Id.ToString());
+                JwtSecurityToken jwtToken = await _identityService.Login("Facebook", userInformation.Id);
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
+            }
+        }
+
+        [HttpPost("github")]
+        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code)
+        {
+            //add error processing
+            //code is expired
+            var access_token = await _gitHubAuthentication.GetAccessToken(code);
+            var userInformation = await _gitHubAuthentication.GetUserInformation(access_token.Token);
+            var user = await _userManager.FindByLoginAsync("GitHub", userInformation.Id.ToString());
+            if (user == null)
+            {
+                var baseUserInfo = new BaseUserInfoModel()
+                {
+                    Email = userInformation.Email ??
+                        (await _gitHubAuthentication.GetUserEmails(access_token.Token)).FirstOrDefault(email => email.Primary)?.Email
+                        ?? "",
+                    UserName = userInformation.Login.Trim().Replace(" ", "_")
+                };
+
+                JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
+                    new("GitHub", userInformation.Id.ToString(), "GitHub"),
+                    baseUserInfo);
+                //add username duplication verification
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
+            }
+            else
+            {
+                JwtSecurityToken jwtToken = await _identityService.Login("GitHub", userInformation.Id.ToString());
                 return Ok(new TokenVm
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
