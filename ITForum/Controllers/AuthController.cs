@@ -128,5 +128,19 @@ namespace ITForum.Api.Controllers
                 });
             }
         }
+        public async Task<ActionResult> CheckUsernameOrEmailExists(string userName, string email)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user != null)
+            {
+                return Ok(new { exists = true });
+            }
+            user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                return Ok(new { exists = true });
+            }
+            return Ok(new { exists = false });
+        }   
     }
 }
