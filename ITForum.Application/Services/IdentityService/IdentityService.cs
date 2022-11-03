@@ -82,6 +82,7 @@ namespace ITForum.Application.Services.IdentityService
                 Email = userInfo.Email,
                 UserName = userInfo.UserName
             };
+            user.EmailConfirmed = userInfo.IsEmailConfirmed;
             IdentityResult result;
             if (password == null)
                 result = await _userManager.CreateAsync(user);
