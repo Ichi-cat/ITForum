@@ -34,19 +34,19 @@ namespace ITForum.Api.Middleware
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new ValidateExceptionVm(validationException));
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, validationException));
                     break;
                 case NotFoundException notFoundException:
                     code = HttpStatusCode.NotFound;
-                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, notFoundException.Message));
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, notFoundException.Message));
                     break;
-                case UserAuthException userAuthException:
+                case AuthenticationError authenticationError:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, userAuthException.Message));
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, authenticationError));
                     break;
                 default:
                     code = HttpStatusCode.InternalServerError;
-                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm().Add((int)code, "Internal server error"));
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, "Internal server error"));
                     logger.LogError(exception.Message);
                     break;
             }

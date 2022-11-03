@@ -26,6 +26,7 @@ namespace ITForum.Persistance
 
             services.AddIdentity<ItForumUser, ItForumRole>(options =>
             {
+                options.User.RequireUniqueEmail = true;
                 options.Password = new PasswordOptions
                 {
                     RequireDigit = false,
