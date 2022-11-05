@@ -99,8 +99,7 @@ namespace ITForum.Api.Controllers
             var fbTokenValidation = await _facebookAuthentication.ValidateToken(token);
             if (!fbTokenValidation.Data.IsValid)
             {
-                //create exception if token is invalid
-                throw new Exception("Token is not valid");
+                throw new AuthenticationError(new []{ "Token is not valid"});
             }
             var userInformation = await _facebookAuthentication.GetUserInformation(token);
             var user = await _userManager.FindByLoginAsync("Facebook", userInformation.Id);
@@ -144,7 +143,7 @@ namespace ITForum.Api.Controllers
         }
 
         [HttpPost("github")]
-        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code, SignInWithProviderModel model)
+        public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code, [FromBody]SignInWithProviderModel model)
         {
             //add error processing
             //code is expired
