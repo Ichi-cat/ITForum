@@ -4,10 +4,16 @@ namespace ITForum.Domain.ItForumUser
 {
     public class ItForumUser : IdentityUser<Guid>
     {
-        public string FirstName { get; set; } = "NoName";
+        public string FirstName { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
-        public string Avatar { get; set; } = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
-        public string Description { get; set; } = "No information";
+        public string? Avatar { get; set; } = null;
+        public string? Description { get; set; } = null;
+        public string? Location { get; set; } = null;
+        public string? BirthLocation { get; set; } = null;
+        public DateTime? BirthDate { get; set; } = null;
+        public string? Study { get; set; } = null;
+        public string? Work { get; set; } = null;
+        public string? TimeZone { get; set; } = null;
 
         public string FullName => $"{FirstName} {LastName}";
     }
