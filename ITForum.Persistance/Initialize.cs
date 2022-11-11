@@ -27,8 +27,16 @@ namespace ITForum.Persistance
                     Id = TestUser.id,
                     Email = TestUser.email,
                     UserName = TestUser.name,
+                    FirstName = TestUser.firstName,
+                    LastName = TestUser.lastName,
                     Description = TestUser.description,
-                    Avatar = TestUser.avatar
+                    Avatar = TestUser.avatar,
+                    Location = TestUser.location,
+                    BirthLocation = TestUser.birthLocation,
+                    BirthDate = TestUser.birthDate,
+                    Study = TestUser.study,
+                    Work = TestUser.work,
+                    TimeZone = TestUser.timeZone
                 };
                 var result = await userManager.CreateAsync(user, TestUser.password);
                 
@@ -77,6 +85,14 @@ namespace ITForum.Persistance
         public static string name = "mihail";
         public static string password = "PaSSword123@dsa-555";
         public static string description = "I am a test user and i don't have a soul. But i can think, so i am not a robot. I guess you're cute";
-        public static string avatar = "https://avatars.githubusercontent.com/u/43109462?v=4";
+        public static string avatar = "https://avatars.githubusercontent.com/u/75914175?v=4";
+        public static string firstName = "Miha";
+        public static string lastName = "Olifer";
+        public static string location = "Zaporizhya/Ukraine";
+        public static string birthLocation = "Zaporizhya/Ukraine";
+        public static DateTime birthDate = DateTime.Parse("21/11/2002");
+        public static string study = "KhPI";
+        public static string work = "McDonald's";
+        public static string timeZone = "Europe/Ukraine";
     }
 }

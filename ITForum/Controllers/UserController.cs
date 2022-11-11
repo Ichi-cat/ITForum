@@ -1,8 +1,16 @@
 ﻿using ITForum.Api.Models;
 using ITForum.Api.ViewModels;
+using ITForum.Application.Common.Exceptions;
+using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
+using MediatR;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using SixLabors.ImageSharp;
+using System.Diagnostics;
 
 namespace ITForum.Api.Controllers
 {
@@ -10,11 +18,14 @@ namespace ITForum.Api.Controllers
     {
         private readonly UserManager<ItForumUser> _userManager;
         private readonly RoleManager<ItForumRole> _roleManager;
+        private readonly IBufferedFileUploadService _uploadFile;
 
-        public UserController(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager)
+        public UserController(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager,
+            IBufferedFileUploadService uploadFile)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _uploadFile = uploadFile;
         }
         /// <summary>
         /// Get user info
@@ -43,11 +54,40 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> UpdateUserInfo(UpdateUserInfoModel userInfo)
         {
             var user = await _userManager.FindByIdAsync(UserId.ToString());
-            user.FirstName = userInfo.FirstName;
-            user.LastName = userInfo.LastName;
-            user.Description = userInfo.Description;
+            //user.FirstName = userInfo.FirstName;
+            //user.LastName = userInfo.LastName;
+            //user.Description = userInfo.Description;
+            user.Avatar = userInfo.Avatar;
             await _userManager.UpdateAsync(user);
             return Ok();
+        }
+        [HttpPost("upload")]
+        public async Task<ActionResult> UploadAvatar(IFormFile file)
+        {
+            if (file.ContentType != "image/jpeg" 
+                && file.ContentType != "image/png")
+            {
+                throw new UploadFileException("File type is not supported");
+            }
+            if ((file.Length / 1024 / 1024) > 5) throw new UploadFileException("Max size is 5MB");
+            using (var stream = file.OpenReadStream())
+            {
+                using(var image = Image.Load(stream))
+                {
+                    if (image.Height != image.Width) throw new UploadFileException("Height must equal width");
+                }
+            }
+            var extension = Path.GetExtension(file.FileName);
+            if (extension == null || extension == "")
+            {
+                extension = ".jpg";
+            }
+            var path = "/UploadedFiles/" + (await _uploadFile.UploadFile(file, Guid.NewGuid().ToString() + extension));
+            path = GenerateAbsoluteUrl(path);
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            user.Avatar = path;
+            await _userManager.UpdateAsync(user);
+            return Ok(path);
         }
     }
 }
