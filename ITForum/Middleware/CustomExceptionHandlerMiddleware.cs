@@ -44,6 +44,10 @@ namespace ITForum.Api.Middleware
                     code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, authenticationError));
                     break;
+                case UploadFileException uploadFileException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, uploadFileException.Message));
+                    break;
                 default:
                     code = HttpStatusCode.InternalServerError;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, "Internal server error"));
