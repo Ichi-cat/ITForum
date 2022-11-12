@@ -8,5 +8,6 @@ namespace ITForum.Domain.TopicItems
         public Guid TopicId { get; set; }
         public MarkType IsLiked { get; set; }
         public Guid UserId { get; set; }
+        public Topic Topic { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
 using ITForum.Domain.Enums;
@@ -23,23 +24,12 @@ namespace ITForum.Application.Topics.Queries.GetLikedTopics
         }
         public async Task<LikedTopicsListVm> Handle(GetLikedTopicsQuery request, CancellationToken cancellationToken)
         {
-            var userLikedMarks = await _context.Marks
-                .Where(x => x.UserId == request.UserId && x.IsLiked == MarkType.LIKE).ToListAsync(cancellationToken);
-                
-            var likedTopicsVm = new List<LikedTopicVm>();
-            
-            foreach (var mark in userLikedMarks)
-            {
-                var topic = await _context.Topics.FindAsync(mark.TopicId);
-                var topicVm = new LikedTopicVm();
-                topicVm.TopicId = topic.Id;
-                topicVm.Name = topic.Name;
-                topicVm.ShortContent = topic.Content.Length > 200 ? topic.Content.Substring(0, 200) : topic.Content;
-                likedTopicsVm.Add(topicVm);
-            }
-            
+            var likedTopics = await _context.Marks.Include(mark => mark.Topic).Where(mark => mark.UserId == request.UserId && mark.IsLiked == MarkType.LIKE)
+                .Select(mark => mark.Topic)
+                .ProjectTo<LikedTopicVm>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
 
-            return new LikedTopicsListVm { LikedTopics = likedTopicsVm };
+            return new LikedTopicsListVm { LikedTopics = likedTopics };
         }
     }
 }
