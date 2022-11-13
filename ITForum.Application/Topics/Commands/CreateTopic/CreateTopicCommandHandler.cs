@@ -23,7 +23,8 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
                 Name = request.Name,
                 Content = request.Content,
                 Id = Guid.NewGuid(),
-                UserId = request.UserId
+                UserId = request.UserId,
+                Created = DateTime.Now
             };
             await _context.Attachments.Where(attachment => request.AttachmentsId
                 .Contains(attachment.Id))

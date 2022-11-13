@@ -11,6 +11,8 @@ using ITForum.Application.Topics.Commands.UploadAttachments;
 using ITForum.Application.Topics.Queries.GetTopicListByTag;
 using ITForum.Domain.TopicItems;
 using ITForum.Application.Topics.Queries.GetMyTopicList;
+using ITForum.Application.Topics.Queries.GetTopicList;
+using ITForum.Domain.Enums;
 
 namespace ITForum.Api.Controllers
 {
@@ -81,7 +83,7 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TopicItemVm>>> GetTopicList(int? count = 10)
+        public async Task<ActionResult<IEnumerable<TopicItemVm>>> GetTopicList()
         {
             var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
             return Ok(topics.Topics);
@@ -176,6 +178,24 @@ namespace ITForum.Api.Controllers
             var id = await Mediator.Send(new UploadAttachmentsCommand { AttachmentsUrl = resultUrl, UserId = UserId });
             // TODO: attach to topic
             return Ok(id);
+        }
+        /// <summary>
+        /// Get topic list(main page)
+        /// </summary>
+        /// ///<remarks>
+        ///     case 0 - SortByDateASC 
+        ///     
+        ///     case 1 - SortByDateDESC 
+        ///     
+        ///     case 2 - SortByRatingASC
+        /// </remarks>
+        /// <param name="TypeOfSort"></param>
+        /// <returns></returns>
+        [HttpGet("TypeOfSort")]
+        public async Task<ActionResult<IEnumerable<TopicVM>>> GetTopicListBySort([FromQuery]ShowTopicsModel showTopicsModel)
+        {
+            var topics = await Mediator.Send(new GetTopicListQuery { Sort = showTopicsModel.Sort, Page = showTopicsModel.Page, PageSize = showTopicsModel.PageSize });
+            return Ok(topics);
         }
     }
 }
