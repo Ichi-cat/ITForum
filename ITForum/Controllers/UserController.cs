@@ -53,11 +53,16 @@ namespace ITForum.Api.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUserInfo(UpdateUserInfoModel userInfo)
         {
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
-            //user.FirstName = userInfo.FirstName;
-            //user.LastName = userInfo.LastName;
-            //user.Description = userInfo.Description;
-            user.Avatar = userInfo.Avatar;
+            ItForumUser user = await _userManager.FindByIdAsync(UserId.ToString());
+
+            user.FirstName = userInfo.FirstName ?? user.FirstName;
+            user.LastName = userInfo.LastName ?? user.LastName;
+            user.Description = userInfo.Description ?? user.Description;
+            user.Avatar = userInfo.Avatar ?? user.Avatar;
+            user.Location = userInfo.Location ?? user.Location;
+            user.BirthDate = userInfo.BirthDate ?? user.BirthDate;
+            user.Study = userInfo.Study ?? user.Study;
+            user.Work = userInfo.Work ?? user.Work;
             await _userManager.UpdateAsync(user);
             return Ok();
         }
