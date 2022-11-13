@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Marks.Commands.SetMark;
 using ITForum.Application.Marks.Queries.GetTopicLikesCountQuery;
+using ITForum.Application.Topics.Queries.GetLikedTopics;
 
 namespace ITForum.Api.Controllers
 {
@@ -53,7 +54,17 @@ namespace ITForum.Api.Controllers
         [HttpGet("{topicId}")]
         public async Task<ActionResult> GetTopicLikes(Guid topicId)
         {
-            var result = await Mediator.Send(new GetTopicLikesCountQuery { UserId = UserId, TopicId = topicId});
+            var result = await Mediator.Send(new GetTopicLikesCountQuery { UserId = UserId, TopicId = topicId });
+            return Ok(result);
+        }
+        /// <summary>
+        /// Get liked topics
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> GetLikedTopics()
+        {
+            var result = await Mediator.Send(new GetLikedTopicsQuery { UserId = UserId });
             return Ok(result);
         }
     }

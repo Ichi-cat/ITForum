@@ -1,6 +1,9 @@
-﻿namespace ITForum.Application.Topics.Queries.GetLikedTopics
+﻿using MediatR;
+
+namespace ITForum.Application.Topics.Queries.GetLikedTopics
 {
-    public class GetLikedTopicsQuery
+    public class GetLikedTopicsQuery : IRequest<LikedTopicsListVm>
     {
+        public Guid UserId { get; set; }
     }
 }
