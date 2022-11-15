@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ITForum.Application.Comments.Queries.GetComments;
+using ITForum.Application.Interfaces;
 using ITForum.Domain.TopicItems;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Tags.Queries.GetTags
 {
-    public class TagVM
+    public class TagVM : IMap
     {
         public string Name { get; set; }
         public void Mapping(Profile profile)

@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ITForum.Application.Interfaces;
-using ITForum.Application.Tags.Queries.GetTags;
+using ITForum.Application.Topics.TopicViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ITForum.Application.Common.Extensions;
 
 namespace ITForum.Application.Topics.Queries.GetTopicListByTag
 {
-    public class GetTopicListByTagQueryHandler : IRequestHandler<GetTopicListByTagQuery, TopicListVM>
+    public class GetTopicListByTagQueryHandler : IRequestHandler<GetTopicListByTagQuery, TopicListVm>
     {
         private readonly IItForumDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -20,21 +16,18 @@ namespace ITForum.Application.Topics.Queries.GetTopicListByTag
         public GetTopicListByTagQueryHandler(IItForumDbContext dbContext,
             IMapper mapper) =>
             (_dbContext, _mapper) = (dbContext, mapper);
-        public async Task<TopicListVM> Handle(GetTopicListByTagQuery request, CancellationToken cancellationToken)
+        public async Task<TopicListVm> Handle(GetTopicListByTagQuery request, CancellationToken cancellationToken)
         {
-            List<TopicVM> topicQuery = await _dbContext.Topics
-                .Skip(request.Page * request.PageSize)
-                .Take(request.PageSize)
-                .ProjectTo<TopicVM>(_mapper.ConfigurationProvider)
+            List<TopicVm> topicQuery = await _dbContext.Topics
+                .Include(topic => topic.Tags)
+                .Where(topic => topic.Tags.Any(tag => tag.Name == request.TagName))
+                .Paginate(request.Page, request.PageSize)
+                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            var responseList = from topic in topicQuery
-                               from tag in topic.Tags
-                               where tag.Name == request.TagName
-                               select topic;
-            int pageCount = topicQuery.Count / request.PageSize;
-            if (topicQuery.Count % request.PageSize != 0) pageCount++;
+            
+            int pageCount = await _dbContext.Topics.GetPageCount(request.PageSize);
 
-            return new TopicListVM { Topics = topicQuery, PageCount = pageCount };
+            return new TopicListVm { Topics = topicQuery, PageCount = pageCount };
         }
     }
 }

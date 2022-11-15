@@ -9,10 +9,8 @@ using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Topics.Commands.UploadAttachments;
 using ITForum.Application.Topics.Queries.GetTopicListByTag;
-using ITForum.Domain.TopicItems;
-using ITForum.Application.Topics.Queries.GetMyTopicList;
 using ITForum.Application.Topics.Queries.GetTopicList;
-using ITForum.Domain.Enums;
+using ITForum.Application.Topics.TopicViewModels;
 
 namespace ITForum.Api.Controllers
 {
@@ -35,13 +33,13 @@ namespace ITForum.Api.Controllers
         /// </remarks>
         /// <param name="count">Int32</param>
         /// <returns>Returns TopicListVm</returns>
-        [SwaggerResponse(200, type: typeof(TopicListVM))]
+        [SwaggerResponse(200, type: typeof(TopicListVm))]
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [HttpGet("ByTag")]
-        public async Task<ActionResult<IEnumerable<TopicVM>>> GetTopicListByTag(int page, int pageSize, Tag tag)
+        public async Task<ActionResult<IEnumerable<TopicVm>>> GetTopicListByTag([FromQuery]PaginationModel pagination, string tagName)
         {
-            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tag.Name, Page = page, PageSize = pageSize });
+            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tagName, Page = pagination.Page, PageSize = pagination.PageSize });
             return Ok(topics.Topics);
         }
         /// <summary>
@@ -67,27 +65,6 @@ namespace ITForum.Api.Controllers
             return Ok(topic);
         }
         //todo: cencrete topiclist
-        /// <summary>
-        /// Get topic list
-        /// </summary>
-        /// /// <remarks>
-        /// Sample request:
-        /// 
-        ///     Get
-        ///     /topic?count=10
-        ///     
-        /// </remarks>
-        /// <param name="count">Int32</param>
-        /// <returns>Returns TopicListVm</returns>
-        [SwaggerResponse(200, type: typeof(TopicListVm))]
-        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
-        [SwaggerResponse(401)]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TopicItemVm>>> GetTopicList()
-        {
-            var topics = await Mediator.Send(new GetMyTopicListQuery { UserId = UserId });
-            return Ok(topics.Topics);
-        }
         /// <summary>
         /// Create topic
         /// </summary>
@@ -171,6 +148,11 @@ namespace ITForum.Api.Controllers
             await Mediator.Send(new DeleteTopicCommand { UserId = UserId, Id = id });
             return NoContent();
         }
+        /// <summary>
+        /// Upload attachments on server
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
         [HttpPost("upload")]
         public async Task<ActionResult<List<Guid>>> UploadAttachmentsOnServer(IFormFile[] files)
         {
@@ -191,11 +173,11 @@ namespace ITForum.Api.Controllers
         /// </remarks>
         /// <param name="TypeOfSort"></param>
         /// <returns></returns>
-        [HttpGet("TypeOfSort")]
-        public async Task<ActionResult<IEnumerable<TopicVM>>> GetTopicListBySort([FromQuery]ShowTopicsModel showTopicsModel)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicList([FromQuery] ShowTopicsModel showTopicsModel,[FromQuery]PaginationModel pagination)
         {
-            var topics = await Mediator.Send(new GetTopicListQuery { Sort = showTopicsModel.Sort, Page = showTopicsModel.Page, PageSize = showTopicsModel.PageSize });
-            return Ok(topics);
+            var topics = await Mediator.Send(new GetTopicListQuery { Page = pagination.Page, PageSize = pagination.PageSize, Sort = showTopicsModel.Sort });
+            return Ok(topics.Topics);
         }
     }
 }

@@ -4,10 +4,13 @@ using ITForum.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ITForum.Domain.Enums;
+using ITForum.Application.Topics.TopicViewModels;
+using AutoMapper.Configuration.Conventions;
+using ITForum.Application.Common.Extensions;
 
 namespace ITForum.Application.Topics.Queries.GetTopicList
 {
-    internal class GetTopicListQueryHandler : IRequestHandler<GetTopicListQuery, TopicListVM>
+    public class GetTopicListQueryHandler : IRequestHandler<GetTopicListQuery, TopicListVm>
     {
         private readonly IItForumDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -15,11 +18,11 @@ namespace ITForum.Application.Topics.Queries.GetTopicList
         public GetTopicListQueryHandler(IItForumDbContext dbContext,
             IMapper mapper) =>
             (_dbContext, _mapper) = (dbContext, mapper);
-        public async Task<TopicListVM> Handle(GetTopicListQuery request, CancellationToken cancellationToken)
+        public async Task<TopicListVm> Handle(GetTopicListQuery request, CancellationToken cancellationToken)
         {
             var topicQuery = _dbContext.Topics
                 .Include(topic => topic.Marks)
-                .ProjectTo<TopicVM>(_mapper.ConfigurationProvider);
+                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider);
                 
             switch (request.Sort)
             {
@@ -30,11 +33,15 @@ namespace ITForum.Application.Topics.Queries.GetTopicList
                     topicQuery = topicQuery.OrderByDescending(topic => topic.Created);
                     break;
                 case TypeOfSort.ByRatingASC:
-                    topicQuery = topicQuery.OrderBy(topic => topic.Marks.Where(mark => mark.IsLiked == MarkType.LIKE).Count());
+                    topicQuery = topicQuery.OrderByDescending(topic => topic.Marks.Where(mark => mark.IsLiked == MarkType.LIKE).Count())
+                        .ThenByDescending(topic => topic.Created);
                     break;
             }
-            topicQuery = topicQuery.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize);
-            return new TopicListVM { Topics = await topicQuery.ToListAsync(cancellationToken) };
+            
+            int pageCount = await _dbContext.Topics.GetPageCount(request.PageSize);
+            topicQuery =  topicQuery.Paginate(request.Page, request.PageSize);
+
+            return new TopicListVm { Topics = await topicQuery.ToListAsync(cancellationToken), PageCount = pageCount };
         }
     }
 }
