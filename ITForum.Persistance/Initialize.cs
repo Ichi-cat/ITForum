@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -87,10 +88,10 @@ namespace ITForum.Persistance
         public static string description = "I am a test user and i don't have a soul. But i can think, so i am not a robot. I guess you're cute";
         public static string avatar = "https://avatars.githubusercontent.com/u/75914175?v=4";
         public static string firstName = "Miha";
-        public static string lastName = "Olifer";
+        public static string lastName = "Olifer";   
         public static string location = "Zaporizhya/Ukraine";
         public static string birthLocation = "Zaporizhya/Ukraine";
-        public static DateTime birthDate = DateTime.Parse("21/11/2002");
+        public static DateTime birthDate = new DateTime(1889, 4, 20);
         public static string study = "KhPI";
         public static string work = "McDonald's";
         public static string timeZone = "Europe/Ukraine";

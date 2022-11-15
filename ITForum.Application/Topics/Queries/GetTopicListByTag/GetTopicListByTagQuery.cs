@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ITForum.Application.Topics.TopicViewModels;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITForum.Application.Topics.Queries.GetTopicListByTag
 {
-    public class GetTopicListByTagQuery : IRequest<TopicListVM>
+    public class GetTopicListByTagQuery : IRequest<TopicListVm>
     {
         public string TagName { get; set; }
         public int Page { get; set; }

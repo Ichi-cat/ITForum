@@ -2,9 +2,9 @@
 using ITForum.Application.Interfaces;
 using ITForum.Domain.TopicItems;
 
-namespace ITForum.Application.Topics.Queries.GetTopicList
+namespace ITForum.Application.Topics.TopicViewModels
 {
-    internal class TopicVM : IMap
+    public class TopicVm : IMap
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -13,7 +13,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicList
         public List<Mark> Marks { get; set; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Topic, TopicVM>()
+            profile.CreateMap<Topic, TopicVm>()
                 .ForMember(d => d.ShortContent, opt => opt.MapFrom(s => s.Content.Substring(0, 200)));
         }
     }
