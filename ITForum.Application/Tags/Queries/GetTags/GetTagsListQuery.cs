@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ITForum.Domain.Enums;
+using MediatR;
 using System.Text;
 
 namespace ITForum.Application.Tags.Queries.GetTags
@@ -7,5 +8,6 @@ namespace ITForum.Application.Tags.Queries.GetTags
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
+        public TagSort Sort { get; set; }
     }
 }
