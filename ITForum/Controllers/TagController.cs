@@ -11,23 +11,6 @@ namespace ITForum.Api.Controllers
     public class TagController : BaseController
     {
         /// <summary>
-        /// Create tag
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [SwaggerResponse(201)]
-        [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
-        [SwaggerResponse(401)]
-        [HttpPost]
-        public async Task<ActionResult<Guid>> CreateTag(CreateTagModel model)
-        {
-            Guid id = await Mediator.Send(new CreateTagCommand
-            {
-                Name = model.Name
-            });
-            return Ok(id);
-        }
-        /// <summary>
         /// Get list of tags
         /// </summary>
         /// <returns></returns>
