@@ -1,15 +1,21 @@
-﻿using ITForum.Api.Models;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ITForum.Api.enums;
+using ITForum.Api.Models;
 using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ITForum.Api.Controllers
@@ -19,19 +25,87 @@ namespace ITForum.Api.Controllers
         private readonly UserManager<ItForumUser> _userManager;
         private readonly RoleManager<ItForumRole> _roleManager;
         private readonly IBufferedFileUploadService _uploadFile;
+        private readonly IMapper _mapper;
 
         public UserController(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager,
-            IBufferedFileUploadService uploadFile)
+            IBufferedFileUploadService uploadFile,
+            IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _uploadFile = uploadFile;
+            _mapper = mapper;
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
+        {
+            List<ItForumUser> subscriptions;
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                subscriptions = new List<ItForumUser>();
+            }
+            else
+            {
+                subscriptions = await _userManager.Users.Where(u => u.Subscribers.Any(u => u.Id == UserId)).ToListAsync();
+            }
+            var query = _userManager.Users
+                .Include(u => u.Subscriptions)
+                .ProjectTo<UserItem>(_mapper.ConfigurationProvider);
+
+            switch (sort)
+            {
+                case UsersSort.ByNameAsc:
+                    query = query.OrderBy(u => u.FirstName);
+                    break;
+                case UsersSort.ByNameDesc:
+                    query = query.OrderByDescending(u => u.FirstName);
+                    break;
+                default:
+                    break;
+            }
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+            
+            int count = await _userManager.Users.CountAsync();
+            int pagesCount = (int)Math.Ceiling(((decimal)count)/pageSize);
+
+            var users = await query.ToListAsync();
+            users.ForEach(u => u.IsSubscribed = subscriptions.Any(s => s.Id == u.Id));
+
+            return Ok(new { users = users, pagesCount = pagesCount});
+        }
+        [HttpPut("Subscribe")]
+        public async Task<ActionResult> Subscribe(Guid userId)
+        {
+            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
+            var userSub = await _userManager.FindByIdAsync(userId.ToString());
+            if (userSub == null)
+            {
+                throw new Exception("User not found");
+            }
+            user?.Subscriptions.Add(userSub);
+            if(user!=null) await _userManager.UpdateAsync(user);
+            return NoContent();
+        }
+        [HttpPut("Unsubscribe")]
+        public async Task<ActionResult> Unsubscribe(Guid userId)
+        {
+            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
+            var userSub = await _userManager.FindByIdAsync(userId.ToString());
+            if (userSub == null)
+            {
+                throw new Exception("User not found");
+            }
+            user?.Subscriptions.Remove(userSub);
+            if (user != null) await _userManager.UpdateAsync(user);
+            return NoContent();
         }
         /// <summary>
         /// Get user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [HttpGet()]
+        [HttpGet("info")]
         public async Task<ActionResult<UserInfoVm>> GetShortUserInfo()
         {
             var user = await _userManager.FindByIdAsync(UserId.ToString());
@@ -43,10 +117,14 @@ namespace ITForum.Api.Controllers
         /// Get full user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [HttpGet("FullInfo")]
-        public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo()
+        [HttpGet("FullInfo/{id?}")]
+        public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo([FromRoute]Guid? id)
         {
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            if (id == null)
+            {
+                id = UserId;
+            }
+            var user = await _userManager.FindByIdAsync(id.ToString());
             var userInfo = Mapper.Map<FullUserInfoVm>(user);
             return userInfo;
         }

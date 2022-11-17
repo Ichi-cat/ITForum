@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using ITForum.Api.Additional;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.OperationFilter<ReApplyOptionalRouteParameterOperationFilter>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @$"JWT Authorization header using the Bearer scheme. 

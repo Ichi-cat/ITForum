@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITForum.Domain.ItForumUser
 {
@@ -14,6 +15,9 @@ namespace ITForum.Domain.ItForumUser
         public string? Study { get; set; } = null;
         public string? Work { get; set; } = null;
         public string? TimeZone { get; set; } = null;
+
+        public List<ItForumUser> Subscriptions { get; set; } = null!;
+        public List<ItForumUser> Subscribers { get; set; } = null!;
 
         public string FullName => $"{FirstName} {LastName}";
     }
