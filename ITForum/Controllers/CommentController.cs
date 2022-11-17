@@ -49,7 +49,7 @@ namespace ITForum.Api.Controllers
         {
             var command = Mapper.Map<UpdateCommentCommand>(model);
             command.UserId = UserId;
-            MediatR.Unit id = await Mediator.Send(command);
+            MediatR.Unit id = await Mediator.Send(command); 
             return NoContent();
         }
         [SwaggerResponse(204)]
