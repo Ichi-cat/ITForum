@@ -13,6 +13,7 @@ namespace ITForum.Persistance
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ItForumUser>().HasMany(u => u.Subscriptions).WithMany(u => u.Subscribers).UsingEntity(j => j.ToTable("UserSubscriptions"));
         }
     }
 }
