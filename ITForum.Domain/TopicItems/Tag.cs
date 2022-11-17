@@ -6,5 +6,6 @@ namespace ITForum.Domain.TopicItems
     {
         [Key]
         public string Name { get; set; }
+        public List<Topic> Topics { get; set; }
     }
 }
