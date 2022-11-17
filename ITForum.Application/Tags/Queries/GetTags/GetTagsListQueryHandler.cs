@@ -9,7 +9,6 @@ namespace ITForum.Application.Tags.Queries.GetTags
 {
     public class GetTagsListQueryHandler : IRequestHandler<GetTagsListQuery, TagListVM>
     {
-        //TODO: dont work (shows empty collection)
         private readonly IItForumDbContext _dbContext;
         private readonly IMapper _mapper;
         public GetTagsListQueryHandler(IItForumDbContext dbContext,

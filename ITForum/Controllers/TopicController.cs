@@ -22,7 +22,7 @@ namespace ITForum.Api.Controllers
             _bufferedFileUploadService = bufferedFileUploadService;
         }
         /// <summary>
-        /// Get topic list
+        /// Get topic list by tag
         /// </summary>
         /// /// <remarks>
         /// Sample request:
@@ -37,10 +37,10 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [HttpGet("ByTag")]
-        public async Task<ActionResult<IEnumerable<TopicVm>>> GetTopicListByTag([FromQuery]PaginationModel pagination, string tagName)
+        public async Task<ActionResult<TopicListVm>> GetTopicListByTag([FromQuery]PaginationModel pagination, string tagName)
         {
             var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tagName, Page = pagination.Page, PageSize = pagination.PageSize });
-            return Ok(topics.Topics);
+            return Ok(topics);
         }
         /// <summary>
         /// Get topic by id
@@ -91,7 +91,7 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
-            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId });
+            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId, Tags = model.TagsNames});
             return Ok(id);
         }
         /// <summary>

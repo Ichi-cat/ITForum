@@ -11,9 +11,6 @@ namespace ITForum.Application.Tags.Commands.CreateTag
     {
         public CreateTagCommandValidator()
         {
-            RuleFor(createTagCommand => createTagCommand.Name)
-                .NotEmpty()
-                .MaximumLength(50);
         }
     }
 }

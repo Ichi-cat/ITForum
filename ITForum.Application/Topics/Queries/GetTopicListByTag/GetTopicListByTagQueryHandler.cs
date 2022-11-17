@@ -18,16 +18,18 @@ namespace ITForum.Application.Topics.Queries.GetTopicListByTag
             (_dbContext, _mapper) = (dbContext, mapper);
         public async Task<TopicListVm> Handle(GetTopicListByTagQuery request, CancellationToken cancellationToken)
         {
-            List<TopicVm> topicQuery = await _dbContext.Topics
+            List<TopicVm> topicsQuery = await _dbContext.Topics
                 .Include(topic => topic.Tags)
                 .Where(topic => topic.Tags.Any(tag => tag.Name == request.TagName))
                 .Paginate(request.Page, request.PageSize)
                 .ProjectTo<TopicVm>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            
-            int pageCount = await _dbContext.Topics.GetPageCount(request.PageSize);
 
-            return new TopicListVm { Topics = topicQuery, PageCount = pageCount };
+            int pageCount = await _dbContext.Topics
+                .Include(topic => topic.Tags)
+                .Where(topic => topic.Tags.Any(tag => tag.Name == request.TagName))
+                .GetPageCount(request.PageSize);
+            return new TopicListVm { Topics = topicsQuery, PageCount = pageCount };
         }
     }
 }

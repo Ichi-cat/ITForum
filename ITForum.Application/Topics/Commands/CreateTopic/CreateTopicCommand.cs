@@ -13,5 +13,6 @@ namespace ITForum.Application.Topics.Commands.CreateTopic
         public string Content { get; set; }
         public List<Guid> AttachmentsId { get; set; }
         public List<Guid> TagsId { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
