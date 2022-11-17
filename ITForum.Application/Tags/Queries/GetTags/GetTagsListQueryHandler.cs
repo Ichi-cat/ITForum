@@ -22,9 +22,24 @@ namespace ITForum.Application.Tags.Queries.GetTags
                 .ProjectTo<TagVM>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
+            switch (request.Sort)
+            {
+                case Domain.Enums.TagSort.ASC:
+                    break;
+                case Domain.Enums.TagSort.DESC:
+                    tagsQuery.Reverse();
+                    break;
+                case Domain.Enums.TagSort.PopularityASC:
+                    //tagsQuery=tagsQuery.OrderByDescending(
+                    /*topicQuery = topicQuery.OrderByDescending(topic => topic.Marks.Where(mark => mark.IsLiked == MarkType.LIKE).Count())
+                            .ThenByDescending(topic => topic.Created);*/
+                    break;
+                default:
+                    break;
+            }
+
             int pageCount = await _dbContext.Tags
                 .GetPageCount(request.PageSize);
-
             return new TagListVM { Tags = tagsQuery, PageCount = pageCount };
         }
     }
