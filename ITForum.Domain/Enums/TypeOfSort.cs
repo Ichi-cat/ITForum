@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ITForum.Domain.Enums
 {
     public enum TypeOfSort
-    { 
+    {
         ByDateASC,
         ByDateDESC,
         ByRatingASC,
