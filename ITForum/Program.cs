@@ -15,6 +15,8 @@ using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using ITForum.Api.Additional;
+using System.Net.Mail;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +85,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddPersistance(builder.Configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
+builder.Services.AddTransient<SmtpClient>(x =>
+{
+    SmtpClient smtpClient = new(builder.Configuration["Smtp:Host"], builder.Configuration.GetValue<int>("Smtp:Port"))
+    {
+        Credentials = new NetworkCredential(builder.Configuration["Smtp:Login"], builder.Configuration["Smtp:Password"]),
+        EnableSsl = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
+    };
+    return smtpClient;
+});
 
 
 builder.Services.AddAuthentication(options =>
