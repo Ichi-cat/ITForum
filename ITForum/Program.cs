@@ -13,10 +13,9 @@ using ITForum.Api.Middleware;
 using Microsoft.AspNetCore.Identity;
 using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using ITForum.Api.Additional;
-using System.Net.Mail;
-using System.Net;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,14 +84,21 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddPersistance(builder.Configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
-builder.Services.AddTransient<SmtpClient>(x =>
+
+builder.Services.AddMailKit(optionBuilder =>
 {
-    SmtpClient smtpClient = new(builder.Configuration["Smtp:Host"], builder.Configuration.GetValue<int>("Smtp:Port"))
+    optionBuilder.UseMailKit(new MailKitOptions()
     {
-        Credentials = new NetworkCredential(builder.Configuration["Smtp:Login"], builder.Configuration["Smtp:Password"]),
-        EnableSsl = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
-    };
-    return smtpClient;
+        Server = builder.Configuration["Smtp:Host"],
+        Port = builder.Configuration.GetValue<int>("Smtp:Port"),
+        SenderName = builder.Configuration["Smtp:From:Name"],
+        SenderEmail = builder.Configuration["Smtp:From:Email"],
+
+        
+        Account = builder.Configuration["Smtp:Login"],
+        Password = builder.Configuration["Smtp:Password"],
+        Security = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
+    });
 });
 
 
