@@ -204,8 +204,8 @@ namespace ITForum.Api.Controllers
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new Exception("User exists");
-            if (!user.EmailConfirmed) throw new Exception("Email is not confirmed. You can't reset password");
+            if (user == null) throw new AuthenticationError(new[] { "User not exists" });
+            if (!user.EmailConfirmed) throw new AuthenticationError(new[] {"Email is not confirmed. You can't reset password"});
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             IDictionary<string, string?> query = new Dictionary<string, string?>() { { "token", token }, { "email", user.Email } };
@@ -223,10 +223,10 @@ namespace ITForum.Api.Controllers
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new Exception("User is not found");
+            if (user == null) throw new AuthenticationError(new[] { "User is not found" });
             var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
             var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
-            if (!result.Succeeded) throw new Exception("Token is failed");
+            if (!result.Succeeded) throw new AuthenticationError(result.Errors);
             return NoContent();
         }
     }
