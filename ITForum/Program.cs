@@ -13,8 +13,9 @@ using ITForum.Api.Middleware;
 using Microsoft.AspNetCore.Identity;
 using ITForum.Application.Services;
 using ITForum.Domain.ItForumUser;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using ITForum.Api.Additional;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,22 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddPersistance(builder.Configuration);
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
+
+builder.Services.AddMailKit(optionBuilder =>
+{
+    optionBuilder.UseMailKit(new MailKitOptions()
+    {
+        Server = builder.Configuration["Smtp:Host"],
+        Port = builder.Configuration.GetValue<int>("Smtp:Port"),
+        SenderName = builder.Configuration["Smtp:From:Name"],
+        SenderEmail = builder.Configuration["Smtp:From:Email"],
+
+        
+        Account = builder.Configuration["Smtp:Login"],
+        Password = builder.Configuration["Smtp:Password"],
+        Security = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
+    });
+});
 
 
 builder.Services.AddAuthentication(options =>
