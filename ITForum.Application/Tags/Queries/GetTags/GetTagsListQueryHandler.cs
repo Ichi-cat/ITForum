@@ -24,9 +24,10 @@ namespace ITForum.Application.Tags.Queries.GetTags
             switch (request.Sort)
             {
                 case Domain.Enums.TagSort.ASC:
+                    tagsQuery = tagsQuery.OrderBy(t => t.Name);
                     break;
                 case Domain.Enums.TagSort.DESC:
-                    tagsQuery = tagsQuery.OrderByDescending(t=>t);
+                    tagsQuery = tagsQuery.OrderByDescending(t=>t.Name);
                     break;
                 case Domain.Enums.TagSort.PopularityASC:
                     tagsQuery = tagsQuery.OrderByDescending(tag => tag.Topics.Count());

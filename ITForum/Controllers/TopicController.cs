@@ -11,9 +11,11 @@ using ITForum.Application.Topics.Commands.UploadAttachments;
 using ITForum.Application.Topics.Queries.GetTopicListByTag;
 using ITForum.Application.Topics.Queries.GetTopicList;
 using ITForum.Application.Topics.TopicViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize]
     public class TopicController : BaseController
     {
         readonly IBufferedFileUploadService _bufferedFileUploadService;
@@ -36,10 +38,11 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(200, type: typeof(TopicListVm))]
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
+        [AllowAnonymous]
         [HttpGet("ByTag")]
-        public async Task<ActionResult<TopicListVm>> GetTopicListByTag([FromQuery]PaginationModel pagination, string tagName)
+        public async Task<ActionResult<TopicListVm>> GetTopicListByTag([FromQuery] ShowTopicsModel showTopicsModel, [FromQuery] PaginationModel pagination, string tagName)
         {
-            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tagName, Page = pagination.Page, PageSize = pagination.PageSize });
+            var topics = await Mediator.Send(new GetTopicListByTagQuery { TagName = tagName, Page = pagination.Page, PageSize = pagination.PageSize, Sort = showTopicsModel.Sort });
             return Ok(topics);
         }
         /// <summary>
@@ -58,6 +61,7 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
@@ -173,11 +177,12 @@ namespace ITForum.Api.Controllers
         /// </remarks>
         /// <param name="TypeOfSort"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicList([FromQuery] ShowTopicsModel showTopicsModel,[FromQuery]PaginationModel pagination)
         {
             var topics = await Mediator.Send(new GetTopicListQuery { Page = pagination.Page, PageSize = pagination.PageSize, Sort = showTopicsModel.Sort });
-            return Ok(topics.Topics);
+            return Ok(topics);
         }
     }
 }

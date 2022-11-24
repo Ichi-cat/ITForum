@@ -1,4 +1,5 @@
 ﻿using ITForum.Application.Topics.TopicViewModels;
+using ITForum.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace ITForum.Application.Topics.Queries.GetTopicListByTag
         public string TagName { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
+        public TypeOfSort Sort { get; set; }
     }
 }

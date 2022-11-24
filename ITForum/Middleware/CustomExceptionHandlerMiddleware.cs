@@ -3,6 +3,7 @@ using System.Text.Json;
 using ITForum.Application.Common.Exceptions;
 using FluentValidation;
 using ITForum.Application.Common.Exceptions.Generals;
+using ITForum.Api.exceptions;
 
 namespace ITForum.Api.Middleware
 {
@@ -47,6 +48,10 @@ namespace ITForum.Api.Middleware
                 case UploadFileException uploadFileException:
                     code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, uploadFileException.Message));
+                    break;
+                case ModelValidationException modelValidationException:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, modelValidationException));
                     break;
                 default:
                     code = HttpStatusCode.InternalServerError;

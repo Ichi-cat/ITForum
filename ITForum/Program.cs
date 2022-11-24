@@ -16,6 +16,7 @@ using ITForum.Domain.ItForumUser;
 using ITForum.Api.Additional;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,11 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile(new GetAssemblyMapsProfile(Assembly.GetExecutingAssembly()));
     config.AddProfile(new GetAssemblyMapsProfile(typeof(IItForumDbContext).Assembly));
 });
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Clear();
+    options.Filters.Add(new ValidationFilterAttribute());
+});
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<ReApplyOptionalRouteParameterOperationFilter>();
@@ -99,6 +104,11 @@ builder.Services.AddMailKit(optionBuilder =>
         Password = builder.Configuration["Smtp:Password"],
         Security = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
     });
+});
+builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
 });
 
 
