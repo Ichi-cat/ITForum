@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using ITForum.Api.exceptions;
 
 namespace ITForum.Application.Common.Exceptions.Generals
 {
@@ -15,6 +16,11 @@ namespace ITForum.Application.Common.Exceptions.Generals
         {
             Code = code;
             Errors = authenticationError.Errors.Select(e => new GeneralExceptionItem(e));
+        }
+        public GeneralExceptionVm(int code, ModelValidationException modelValidationException)
+        {
+            Code = code;
+            Errors = modelValidationException.Errors.Select(e => new GeneralExceptionItem(e));
         }
         public GeneralExceptionVm(int code, ValidationException exception)
         {
