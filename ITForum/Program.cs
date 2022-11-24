@@ -191,6 +191,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseHttpsRedirection();
 
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapDefaultControllerRoute();

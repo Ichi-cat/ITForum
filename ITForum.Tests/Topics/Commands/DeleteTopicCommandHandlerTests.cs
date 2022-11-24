@@ -54,7 +54,7 @@ namespace ITForum.Tests.Topics.Commands
         {
             // Arrange
             var deleteHandler = new DeleteTopicCommandHandler(Context);
-            var createHandler = new CreateTopicCommandHandler(Context);
+            //var createHandler = new CreateTopicCommandHandler(Context);
             //var noteId = await createHandler.Handle(
             //    new CreateTopicCommand
             //    {

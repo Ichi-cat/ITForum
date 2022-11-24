@@ -117,14 +117,17 @@ namespace ITForum.Api.Controllers
         /// Get full user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
+        [AllowAnonymous]
         [HttpGet("FullInfo/{id?}")]
         public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo([FromRoute]Guid? id)
         {
-            if (id == null)
+            if (id == null && UserId!=Guid.Empty)
             {
                 id = UserId;
             }
+            if (id == null) throw new AuthenticationError(new[] { "User not found" });
             var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null) throw new AuthenticationError(new[] { "User not found" });
             var userInfo = Mapper.Map<FullUserInfoVm>(user);
             return userInfo;
         }
