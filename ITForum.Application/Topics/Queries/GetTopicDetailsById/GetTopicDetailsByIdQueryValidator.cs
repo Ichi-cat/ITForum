@@ -8,8 +8,6 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
         {
             RuleFor(getTopicDetailsByIdQuery => getTopicDetailsByIdQuery.Id)
                 .NotEqual(Guid.Empty);
-            RuleFor(getTopicDetailsByIdQuery => getTopicDetailsByIdQuery.UserId)
-                .NotEqual(Guid.Empty);
         }
     }
 }

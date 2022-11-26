@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ITForum.Domain.Enums;
 using ITForum.Application.Topics.TopicViewModels;
-using AutoMapper.Configuration.Conventions;
 using ITForum.Application.Common.Extensions;
 
 namespace ITForum.Application.Topics.Queries.GetTopicList
@@ -22,22 +21,9 @@ namespace ITForum.Application.Topics.Queries.GetTopicList
         {
             var topicQuery = _dbContext.Topics
                 .Include(topic => topic.Marks)
-                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider);
-                
-            switch (request.Sort)
-            {
-                case TypeOfSort.ByDateASC:
-                    topicQuery = topicQuery.OrderBy(topic => topic.Created);
-                    break;
-                case TypeOfSort.ByDateDESC:
-                    topicQuery = topicQuery.OrderByDescending(topic => topic.Created);
-                    break;
-                case TypeOfSort.ByRatingASC:
-                    topicQuery = topicQuery.OrderByDescending(topic => topic.Marks.Where(mark => mark.IsLiked == MarkType.LIKE).Count())
-                        .ThenByDescending(topic => topic.Created);
-                    break;
-            }
-            
+                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider)
+                .Sort(request.Sort);
+
             int pageCount = await _dbContext.Topics.GetPageCount(request.PageSize);
             topicQuery =  topicQuery.Paginate(request.Page, request.PageSize);
 
