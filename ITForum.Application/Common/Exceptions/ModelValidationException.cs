@@ -1,7 +1,6 @@
-﻿using ITForum.Application.Common.Exceptions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ITForum.Api.exceptions
+namespace ITForum.Application.Common.Exceptions
 {
     public class ModelValidationException : Exception
     {

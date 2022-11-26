@@ -1,4 +1,4 @@
-﻿using ITForum.Api.exceptions;
+﻿using ITForum.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ITForum.Api.Additional

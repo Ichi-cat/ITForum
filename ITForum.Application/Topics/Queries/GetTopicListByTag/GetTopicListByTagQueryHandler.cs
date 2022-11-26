@@ -22,22 +22,9 @@ namespace ITForum.Application.Topics.Queries.GetTopicListByTag
             var topicsQuery = _dbContext.Topics
                 .Include(topic => topic.Tags)
                 .Where(topic => topic.Tags.Any(tag => tag.Name == request.TagName))
-                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider);
-                
+                .ProjectTo<TopicVm>(_mapper.ConfigurationProvider)
+                .Sort(request.Sort);
 
-            switch (request.Sort)
-            {
-                case TypeOfSort.ByDateASC:
-                    topicsQuery = topicsQuery.OrderBy(topic => topic.Created);
-                    break;
-                case TypeOfSort.ByDateDESC:
-                    topicsQuery = topicsQuery.OrderByDescending(topic => topic.Created);
-                    break;
-                case TypeOfSort.ByRatingASC:
-                    topicsQuery = topicsQuery.OrderByDescending(topic => topic.Marks.Where(mark => mark.IsLiked == MarkType.LIKE).Count())
-                        .ThenByDescending(topic => topic.Created);
-                    break;
-            }
             topicsQuery = topicsQuery.Paginate(request.Page, request.PageSize);
 
             int pageCount = await _dbContext.Topics
