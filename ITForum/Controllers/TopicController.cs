@@ -193,6 +193,10 @@ namespace ITForum.Api.Controllers
         [HttpGet("ByUserId")]
         public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicListByUserId([FromQuery]GetTopicListByUserQuery query)
         {
+            if (query.UserId == null && UserId != Guid.Empty)
+            {
+                query.UserId = UserId;
+            }
             var topics = await Mediator.Send(query);
             return Ok(topics);
         }
