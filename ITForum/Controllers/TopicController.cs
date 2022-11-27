@@ -13,6 +13,7 @@ using ITForum.Application.Topics.Queries.GetTopicList;
 using ITForum.Application.Topics.TopicViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ITForum.Application.Topics.Queries.GetTopicsBySubscriptions;
+using ITForum.Application.Topics.Queries.GetMyTopicList;
 
 namespace ITForum.Api.Controllers
 {
@@ -66,7 +67,7 @@ namespace ITForum.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
-            var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { UserId = UserId, Id = id });
+            var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { Id = id });
             return Ok(topic);
         }
         //todo: cencrete topiclist
@@ -96,7 +97,7 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult<Guid>> CreateTopic(CreateTopicModel model)
         {
             var id = await Mediator.Send(new CreateTopicCommand
-            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId, Tags = model.TagsNames});
+            { UserId = UserId, Name = model.Name, Content = model.Content, AttachmentsId = model.AttachmentsId, Tags = model.TagsNames });
             return Ok(id);
         }
         /// <summary>
@@ -180,15 +181,31 @@ namespace ITForum.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicList([FromQuery] ShowTopicsModel showTopicsModel,[FromQuery]PaginationModel pagination)
+        public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicList([FromQuery] ShowTopicsModel showTopicsModel, [FromQuery] PaginationModel pagination)
         {
             var topics = await Mediator.Send(new GetTopicListQuery { Page = pagination.Page, PageSize = pagination.PageSize, Sort = showTopicsModel.Sort });
             return Ok(topics);
         }
+
         [HttpGet("BySubscriptions")]
         public async Task<ActionResult> GetTopicsBySubscriptions([FromQuery]PaginationModel paginationModel, [FromQuery]ShowTopicsModel sortModel)
         {
             var topics = await Mediator.Send(new GetTopicsBySubscriptionsQuery { UserId = UserId, Page= paginationModel.Page, PageSize= paginationModel.PageSize, Sort=sortModel.Sort });
+            return Ok(topics);
+        }
+        /// <summary>
+        /// Get topic list by UserId
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("ByUserId")]
+        public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicListByUserId([FromQuery]GetTopicListByUserQuery query)
+        {
+            if (query.UserId == null && UserId != Guid.Empty)
+            {
+                query.UserId = UserId;
+            }
+            var topics = await Mediator.Send(query);
             return Ok(topics);
         }
     }

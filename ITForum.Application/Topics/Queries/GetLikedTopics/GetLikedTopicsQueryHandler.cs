@@ -27,13 +27,14 @@ namespace ITForum.Application.Topics.Queries.GetLikedTopics
                 .Paginate(request.Page, request.PageSize)
                 .ProjectTo<TopicVm>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            int pageCount = await _context.Marks.Include(mark => mark.Topic)
+            
+            int pageCount = await _context.Marks
+                .Include(mark => mark.Topic)
                 .Where(mark => mark.UserId == request.UserId && mark.IsLiked == MarkType.LIKE)
                 .Select(mark => mark.Topic)
                 .GetPageCount(request.PageSize);
 
-            return new TopicListVm { Topics = likedTopics };
+            return new TopicListVm { Topics = likedTopics, PageCount = pageCount};
         }
     }
 }

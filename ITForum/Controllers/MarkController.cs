@@ -62,9 +62,9 @@ namespace ITForum.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> GetLikedTopics()
+        public async Task<ActionResult> GetLikedTopics([FromQuery]PaginationModel paginationModel)
         {
-            var result = await Mediator.Send(new GetLikedTopicsQuery { UserId = UserId });
+            var result = await Mediator.Send(new GetLikedTopicsQuery { UserId = UserId, Page = paginationModel.Page, PageSize = paginationModel.PageSize });
             return Ok(result);
         }
     }

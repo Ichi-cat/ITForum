@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using ITForum.Api.exceptions;
 
 namespace ITForum.Application.Common.Exceptions.Generals
 {

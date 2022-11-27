@@ -2,9 +2,9 @@
 
 namespace ITForum.Application.Topics.Queries.GetMyTopicList
 {
-    public class GetMyTopicListQueryValidator : AbstractValidator<GetMyTopicListQuery>
+    public class GetTopicListByUserQueryValidator : AbstractValidator<GetTopicListByUserQuery>
     {
-        public GetMyTopicListQueryValidator()
+        public GetTopicListByUserQueryValidator()
         {
             RuleFor(getMyTopicListQuery => getMyTopicListQuery.UserId)
                 .NotEqual(Guid.Empty);

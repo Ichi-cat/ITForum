@@ -3,7 +3,6 @@ using System.Text.Json;
 using ITForum.Application.Common.Exceptions;
 using FluentValidation;
 using ITForum.Application.Common.Exceptions.Generals;
-using ITForum.Api.exceptions;
 
 namespace ITForum.Api.Middleware
 {
