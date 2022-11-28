@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using ITForum.Application.Interfaces;
-using ITForum.Application.Users.Commands.UpdateUserInfo;
+﻿using MediatR;
 
-namespace ITForum.Api.Models
+namespace ITForum.Application.Users.Commands.UpdateUserInfo
 {
-    public class UpdateUserInfoModel:IMap
+    public class UpdateUserInfoCommand:IRequest
     {
+        public Guid UserId { get; set; }
+        
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Description { get; set; }
@@ -14,10 +14,5 @@ namespace ITForum.Api.Models
         public string? Study { get; set; }
         public string? Work { get; set; }
         public DateTime? BirthDate { get; set; }
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<UpdateUserInfoModel, UpdateUserInfoCommand>();
-        }
     }
 }
