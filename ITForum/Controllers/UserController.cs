@@ -5,6 +5,7 @@ using ITForum.Api.Models;
 using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Interfaces;
+using ITForum.Application.Users.Queries.GetUserList;
 using ITForum.Domain.ItForumUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -40,40 +41,10 @@ namespace ITForum.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
         {
-            List<ItForumUser> subscriptions;
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                subscriptions = new List<ItForumUser>();
-            }
-            else
-            {
-                subscriptions = await _userManager.Users.Where(u => u.Subscribers.Any(u => u.Id == UserId)).ToListAsync();
-            }
-            var query = _userManager.Users
-                .Include(u => u.Subscriptions)
-                .ProjectTo<UserItem>(_mapper.ConfigurationProvider);
+            var query = new GetUserListQuery { Sort = sort, Page = page, PageSize = pageSize, UserId = UserId };
+            var users = await Mediator.Send(query);
 
-            switch (sort)
-            {
-                case UsersSort.ByNameAsc:
-                    query = query.OrderBy(u => u.FirstName);
-                    break;
-                case UsersSort.ByNameDesc:
-                    query = query.OrderByDescending(u => u.FirstName);
-                    break;
-                default:
-                    break;
-            }
-            query = query.Skip((page - 1) * pageSize).Take(pageSize);
-
-            
-            int count = await _userManager.Users.CountAsync();
-            int pagesCount = (int)Math.Ceiling(((decimal)count)/pageSize);
-
-            var users = await query.ToListAsync();
-            users.ForEach(u => u.IsSubscribed = subscriptions.Any(s => s.Id == u.Id));
-
-            return Ok(new { users = users, pagesCount = pagesCount});
+            return Ok(users);
         }
         [HttpPut("Subscribe")]
         public async Task<ActionResult> Subscribe(Guid userId)
