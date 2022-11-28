@@ -8,7 +8,6 @@ using ITForum.Application.Services.IdentityService;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NETCore.MailKit.Core;
 using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 
