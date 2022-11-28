@@ -10,5 +10,7 @@ namespace ITForum.Application.Interfaces
         Task<JwtSecurityToken> CreateUser(BaseUserInfoModel userInfo, string password);
         Task<JwtSecurityToken> Login(BaseUserInfoModel userInfo, string password);
         Task<JwtSecurityToken> Login(string loginProvider, string providerKey);
+        Task SendToken(string email, Uri redirectUri);
+        Task ResetPassword(string token, string email, string password);
     }
 }

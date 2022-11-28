@@ -8,12 +8,9 @@ using ITForum.Application.Services.IdentityService;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using NETCore.MailKit.Core;
 using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Text.Encodings.Web;
 
 namespace ITForum.Api.Controllers
 {
@@ -24,23 +21,17 @@ namespace ITForum.Api.Controllers
         private readonly IFacebookAuthentication _facebookAuthentication;
         private readonly IGitHubAuthentication _gitHubAuthentication;
         private readonly IIdentityService _identityService;
-        private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
 
         public AuthController(
             UserManager<ItForumUser> userManager,
             IFacebookAuthentication facebookAuthentication,
             IGitHubAuthentication gitHubAuthentication,
-            IIdentityService identityService,
-            IEmailService emailService,
-            IConfiguration configuration)
+            IIdentityService identityService)
         {
             _userManager = userManager;
             _facebookAuthentication = facebookAuthentication;
             _gitHubAuthentication = gitHubAuthentication;
             _identityService = identityService;
-            _emailService = emailService;
-            _configuration = configuration;
         }
         /// <summary>
         /// Login action
@@ -62,7 +53,6 @@ namespace ITForum.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignIn([FromBody] SignInModel model)
         {
-            //todo: validation
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
             var token = await _identityService.Login(new BaseUserInfoModel { UserName = model.UserName, Email = model.UserName }, model.Password);
             return Ok(new TokenVm
@@ -115,7 +105,6 @@ namespace ITForum.Api.Controllers
             var user = await _userManager.FindByLoginAsync("Facebook", userInformation.Id);
             if (user == null)
             {
-                //let user choose username
                 var baseUserInfo = new BaseUserInfoModel()
                 {
                     Email = userInformation.Email,
@@ -142,7 +131,6 @@ namespace ITForum.Api.Controllers
             }
             else
             {
-                //facebook const
                 JwtSecurityToken jwtToken = await _identityService.Login("Facebook", userInformation.Id);
                 return Ok(new TokenVm
                 {
@@ -155,8 +143,6 @@ namespace ITForum.Api.Controllers
         [HttpPost("github")]
         public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code, [FromBody] SignInWithProviderModel model)
         {
-            //add error processing
-            //code is expired
             var access_token = await _gitHubAuthentication.GetAccessToken(code);
             var userInformation = await _gitHubAuthentication.GetUserInformation(access_token.Token);
             var user = await _userManager.FindByLoginAsync("GitHub", userInformation.Id.ToString());
@@ -182,7 +168,6 @@ namespace ITForum.Api.Controllers
                 JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
                     new("GitHub", userInformation.Id.ToString(), "GitHub"),
                     baseUserInfo);
-                //add username duplication verification
                 return Ok(new TokenVm
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
@@ -203,18 +188,7 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> GetToken([FromBody]GetTokenModel model)
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new AuthenticationError(new[] { "User not exists" });
-            if (!user.EmailConfirmed) throw new AuthenticationError(new[] {"Email is not confirmed. You can't reset password"});
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-            IDictionary<string, string?> query = new Dictionary<string, string?>() { { "token", token }, { "email", user.Email } };
-            var redirect_uri = new Uri(QueryHelpers.AddQueryString(model.RedirectUri.AbsoluteUri, query));
-
-            var path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "Html/ResetPassword.html"));
-
-            string data = System.IO.File.ReadAllText(path).Replace("linkedUrl", HtmlEncoder.Default.Encode(redirect_uri.ToString()));
-            await _emailService.SendAsync("staske11111@gmail.com", "Reset password", data, isHtml: true);
+            await _identityService.SendToken(model.Email, model.RedirectUri);
 
             return NoContent();
         }
@@ -222,11 +196,7 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> ResetPassword([FromBody]ResetPasswordModel model)
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new AuthenticationError(new[] { "User is not found" });
-            var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
-            var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
-            if (!result.Succeeded) throw new AuthenticationError(result.Errors);
+            await _identityService.ResetPassword(model.Token, model.Email, model.Password);
             return NoContent();
         }
     }
