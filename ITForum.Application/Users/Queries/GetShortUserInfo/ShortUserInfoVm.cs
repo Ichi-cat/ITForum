@@ -2,9 +2,9 @@
 using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
 
-namespace ITForum.Api.ViewModels
+namespace ITForum.Application.Users.Queries.GetShortUserInfo
 {
-    public class UserInfoVm : IMap
+    public class ShortUserInfoVm:IMap
     {
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
@@ -13,7 +13,7 @@ namespace ITForum.Api.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ItForumUser, UserInfoVm>()
+            profile.CreateMap<ItForumUser, ShortUserInfoVm>()
                 .ForMember(vm => vm.UserName, opt => opt.MapFrom(user => user.UserName))
                 .ForMember(vm => vm.Email, opt => opt.MapFrom(user => user.Email))
                 .ForMember(vm => vm.Avatar, opt => opt.MapFrom(user => user.Avatar));

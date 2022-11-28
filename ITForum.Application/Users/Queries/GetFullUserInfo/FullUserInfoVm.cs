@@ -2,7 +2,7 @@
 using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
 
-namespace ITForum.Api.ViewModels
+namespace ITForum.Application.Users.Queries.GetFullUserInfo
 {
     public class FullUserInfoVm : IMap
     {

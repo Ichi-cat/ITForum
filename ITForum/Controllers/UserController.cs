@@ -7,6 +7,8 @@ using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Users.Commands.SubscribeOnUser;
 using ITForum.Application.Users.Commands.UnsubscribeFromUser;
+using ITForum.Application.Users.Queries.GetFullUserInfo;
+using ITForum.Application.Users.Queries.GetShortUserInfo;
 using ITForum.Application.Users.Queries.GetUserList;
 using ITForum.Domain.ItForumUser;
 using MediatR;
@@ -67,13 +69,18 @@ namespace ITForum.Api.Controllers
         /// Get user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [HttpGet("info")]
-        public async Task<ActionResult<UserInfoVm>> GetShortUserInfo()
+        [AllowAnonymous]
+        [HttpGet("info/{id?}")]
+        public async Task<ActionResult<ShortUserInfoVm>> GetShortUserInfo(Guid? id)
         {
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
-            var userInfo = Mapper.Map<UserInfoVm>(user);
-            userInfo.Roles = await _userManager.GetRolesAsync(user);
-            return userInfo;
+            if (id == null && UserId != Guid.Empty)
+            {
+                id = UserId;
+            }
+            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            var query = new GetShortUserInfoQuery { UserId = UserId };
+            var userInfo = await Mediator.Send(query);
+            return Ok(userInfo);
         }
         /// <summary>
         /// Get full user info
@@ -88,10 +95,9 @@ namespace ITForum.Api.Controllers
                 id = UserId;
             }
             if (id == null) throw new AuthenticationError(new[] { "User not found" });
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null) throw new AuthenticationError(new[] { "User not found" });
-            var userInfo = Mapper.Map<FullUserInfoVm>(user);
-            return userInfo;
+            var query = new GetFullUserInfoQuery { UserId = UserId };
+            var userInfo = await Mediator.Send(query);
+            return Ok(userInfo);
         }
         [HttpPut]
         public async Task<ActionResult> UpdateUserInfo(UpdateUserInfoModel userInfo)
