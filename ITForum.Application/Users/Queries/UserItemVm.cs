@@ -2,9 +2,9 @@
 using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
 
-namespace ITForum.Api.ViewModels
+namespace ITForum.Application.Users.Queries
 {
-    public class UserItem : IMap
+    public class UserItemVm : IMap
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -18,7 +18,7 @@ namespace ITForum.Api.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ItForumUser, UserItem>()
+            profile.CreateMap<ItForumUser, UserItemVm>()
                 .ForMember(i => i.FullName, map => map.MapFrom(u => u.FullName));
         }
     }

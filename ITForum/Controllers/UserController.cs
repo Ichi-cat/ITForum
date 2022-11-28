@@ -1,117 +1,59 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ITForum.Api.enums;
+﻿using ITForum.Api.enums;
 using ITForum.Api.Models;
-using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
-using ITForum.Application.Interfaces;
-using ITForum.Domain.ItForumUser;
-using MediatR;
+using ITForum.Application.Users.Commands.SubscribeOnUser;
+using ITForum.Application.Users.Commands.UnsubscribeFromUser;
+using ITForum.Application.Users.Commands.UpdateUserInfo;
+using ITForum.Application.Users.Commands.UploadAvatar;
+using ITForum.Application.Users.Queries.GetFullUserInfo;
+using ITForum.Application.Users.Queries.GetShortUserInfo;
+using ITForum.Application.Users.Queries.GetUserList;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
-using SixLabors.ImageSharp;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ITForum.Api.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly UserManager<ItForumUser> _userManager;
-        private readonly RoleManager<ItForumRole> _roleManager;
-        private readonly IBufferedFileUploadService _uploadFile;
-        private readonly IMapper _mapper;
-
-        public UserController(UserManager<ItForumUser> userManager, RoleManager<ItForumRole> roleManager,
-            IBufferedFileUploadService uploadFile,
-            IMapper mapper)
-        {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _uploadFile = uploadFile;
-            _mapper = mapper;
-        }
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
         {
-            List<ItForumUser> subscriptions;
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                subscriptions = new List<ItForumUser>();
-            }
-            else
-            {
-                subscriptions = await _userManager.Users.Where(u => u.Subscribers.Any(u => u.Id == UserId)).ToListAsync();
-            }
-            var query = _userManager.Users
-                .Include(u => u.Subscriptions)
-                .ProjectTo<UserItem>(_mapper.ConfigurationProvider);
+            var query = new GetUserListQuery { Sort = sort, Page = page, PageSize = pageSize, UserId = UserId };
+            var users = await Mediator.Send(query);
 
-            switch (sort)
-            {
-                case UsersSort.ByNameAsc:
-                    query = query.OrderBy(u => u.FirstName);
-                    break;
-                case UsersSort.ByNameDesc:
-                    query = query.OrderByDescending(u => u.FirstName);
-                    break;
-                default:
-                    break;
-            }
-            query = query.Skip((page - 1) * pageSize).Take(pageSize);
-
-            
-            int count = await _userManager.Users.CountAsync();
-            int pagesCount = (int)Math.Ceiling(((decimal)count)/pageSize);
-
-            var users = await query.ToListAsync();
-            users.ForEach(u => u.IsSubscribed = subscriptions.Any(s => s.Id == u.Id));
-
-            return Ok(new { users = users, pagesCount = pagesCount});
+            return Ok(users);
         }
         [HttpPut("Subscribe")]
         public async Task<ActionResult> Subscribe(Guid userId)
         {
-            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
-            var userSub = await _userManager.FindByIdAsync(userId.ToString());
-            if (userSub == null)
-            {
-                throw new Exception("User not found");
-            }
-            user?.Subscriptions.Add(userSub);
-            if(user!=null) await _userManager.UpdateAsync(user);
+            var command = new SubscribeOnUserCommand() { UserId = UserId, SubscribeUserId = userId};
+            await Mediator.Send(command);
             return NoContent();
         }
         [HttpPut("Unsubscribe")]
         public async Task<ActionResult> Unsubscribe(Guid userId)
         {
-            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
-            var userSub = await _userManager.FindByIdAsync(userId.ToString());
-            if (userSub == null)
-            {
-                throw new Exception("User not found");
-            }
-            user?.Subscriptions.Remove(userSub);
-            if (user != null) await _userManager.UpdateAsync(user);
+            var command = new UnsubscribeFromUserCommand() { UserId = UserId, UnsubscribeUserId = userId };
+            await Mediator.Send(command);
             return NoContent();
         }
         /// <summary>
         /// Get user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [HttpGet("info")]
-        public async Task<ActionResult<UserInfoVm>> GetShortUserInfo()
+        [AllowAnonymous]
+        [HttpGet("info/{id?}")]
+        public async Task<ActionResult<ShortUserInfoVm>> GetShortUserInfo(Guid? id)
         {
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
-            var userInfo = Mapper.Map<UserInfoVm>(user);
-            userInfo.Roles = await _userManager.GetRolesAsync(user);
-            return userInfo;
+            if (id == null && UserId != Guid.Empty)
+            {
+                id = UserId;
+            }
+            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            var query = new GetShortUserInfoQuery { UserId = UserId };
+            var userInfo = await Mediator.Send(query);
+            return Ok(userInfo);
         }
         /// <summary>
         /// Get full user info
@@ -126,53 +68,29 @@ namespace ITForum.Api.Controllers
                 id = UserId;
             }
             if (id == null) throw new AuthenticationError(new[] { "User not found" });
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null) throw new AuthenticationError(new[] { "User not found" });
-            var userInfo = Mapper.Map<FullUserInfoVm>(user);
-            return userInfo;
+            var query = new GetFullUserInfoQuery { UserId = UserId };
+            var userInfo = await Mediator.Send(query);
+            return Ok(userInfo);
         }
         [HttpPut]
         public async Task<ActionResult> UpdateUserInfo(UpdateUserInfoModel userInfo)
         {
-            ItForumUser user = await _userManager.FindByIdAsync(UserId.ToString());
-
-            user.FirstName = userInfo.FirstName ?? user.FirstName;
-            user.LastName = userInfo.LastName ?? user.LastName;
-            user.Description = userInfo.Description ?? user.Description;
-            user.Avatar = userInfo.Avatar ?? user.Avatar;
-            user.Location = userInfo.Location ?? user.Location;
-            user.BirthDate = userInfo.BirthDate ?? user.BirthDate;
-            user.Study = userInfo.Study ?? user.Study;
-            user.Work = userInfo.Work ?? user.Work;
-            await _userManager.UpdateAsync(user);
-            return Ok();
+            var command = Mapper.Map<UpdateUserInfoCommand>(userInfo);
+            command.UserId = UserId;
+            await Mediator.Send(command);
+            return NoContent();
         }
         [HttpPost("upload")]
         public async Task<ActionResult> UploadAvatar(IFormFile file)
         {
-            if (file.ContentType != "image/jpeg" 
-                && file.ContentType != "image/png")
+            var command = new UploadAvatarCommand()
             {
-                throw new UploadFileException("File type is not supported");
-            }
-            if ((file.Length / 1024 / 1024) > 5) throw new UploadFileException("Max size is 5MB");
-            using (var stream = file.OpenReadStream())
-            {
-                using(var image = Image.Load(stream))
-                {
-                    if (image.Height != image.Width) throw new UploadFileException("Height must equal width");
-                }
-            }
-            var extension = Path.GetExtension(file.FileName);
-            if (extension == null || extension == "")
-            {
-                extension = ".jpg";
-            }
-            var path = "/UploadedFiles/" + (await _uploadFile.UploadFile(file, Guid.NewGuid().ToString() + extension));
-            path = GenerateAbsoluteUrl(path);
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
-            user.Avatar = path;
-            await _userManager.UpdateAsync(user);
+                Avatar = file,
+                UserId = UserId,
+                Path = GenerateAbsoluteUrl("/UploadedFiles/")
+            };
+            var path = await Mediator.Send(command);
+
             return Ok(path);
         }
     }
