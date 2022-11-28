@@ -5,6 +5,8 @@ using ITForum.Api.Models;
 using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Interfaces;
+using ITForum.Application.Users.Commands.SubscribeOnUser;
+using ITForum.Application.Users.Commands.UnsubscribeFromUser;
 using ITForum.Application.Users.Queries.GetUserList;
 using ITForum.Domain.ItForumUser;
 using MediatR;
@@ -18,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using System.Collections.Generic;
 using System.Diagnostics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ITForum.Api.Controllers
 {
@@ -49,27 +52,15 @@ namespace ITForum.Api.Controllers
         [HttpPut("Subscribe")]
         public async Task<ActionResult> Subscribe(Guid userId)
         {
-            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
-            var userSub = await _userManager.FindByIdAsync(userId.ToString());
-            if (userSub == null)
-            {
-                throw new Exception("User not found");
-            }
-            user?.Subscriptions.Add(userSub);
-            if(user!=null) await _userManager.UpdateAsync(user);
+            var command = new SubscribeOnUserCommand() { UserId = UserId, SubscribeUserId = userId};
+            var x = await Mediator.Send(command);
             return NoContent();
         }
         [HttpPut("Unsubscribe")]
         public async Task<ActionResult> Unsubscribe(Guid userId)
         {
-            var user = await _userManager.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == UserId);
-            var userSub = await _userManager.FindByIdAsync(userId.ToString());
-            if (userSub == null)
-            {
-                throw new Exception("User not found");
-            }
-            user?.Subscriptions.Remove(userSub);
-            if (user != null) await _userManager.UpdateAsync(user);
+            var command = new UnsubscribeFromUserCommand() { UserId = UserId, UnsubscribeUserId = userId };
+            await Mediator.Send(command);
             return NoContent();
         }
         /// <summary>
