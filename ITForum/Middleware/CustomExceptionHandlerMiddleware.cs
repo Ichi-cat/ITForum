@@ -41,7 +41,7 @@ namespace ITForum.Api.Middleware
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, notFoundException.Message));
                     break;
                 case AuthenticationError authenticationError:
-                    code = HttpStatusCode.BadRequest;
+                    code = HttpStatusCode.Unauthorized;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, authenticationError));
                     break;
                 case UploadFileException uploadFileException:
