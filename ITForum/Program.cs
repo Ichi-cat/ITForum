@@ -111,18 +111,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-var tokenValidationParameters = new TokenValidationParameters
-{
-    ValidateIssuer = true,
-    ValidIssuer = builder.Configuration["AuthOptions:Issuer"],
-    ValidateAudience = true,
-    ValidAudience = builder.Configuration["AuthOptions:Audience"],
-    ValidateLifetime = true,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"])),//todo: âûíåñòè â îòäåëüíûé ôàéë, äîáàâèòü ñåêðåòíûé êëþ÷
-    ValidateIssuerSigningKey = true,
-    ClockSkew = TimeSpan.Zero
-};
-builder.Services.AddSingleton(tokenValidationParameters);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -131,9 +119,18 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.SaveToken = false;
+    options.SaveToken = true;
     options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = tokenValidationParameters;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["AuthOptions:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["AuthOptions:Audience"],
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"])),//todo: âûíåñòè â îòäåëüíûé ôàéë, äîáàâèòü ñåêðåòíûé êëþ÷
+        ValidateIssuerSigningKey = true
+    };
 });
 
 builder.Services.AddCors(options =>

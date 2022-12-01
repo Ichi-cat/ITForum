@@ -1,14 +1,11 @@
 ﻿using ITForum.Application.Common.Exceptions;
-using ITForum.Application.Common.ViewModels;
 using ITForum.Application.Interfaces;
 using ITForum.Domain.ItForumUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NETCore.MailKit.Core;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -21,18 +18,14 @@ namespace ITForum.Application.Services.IdentityService
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly UserManager<ItForumUser> _userManager;
-        private readonly IAuthDbContext _authContext;
-        private readonly TokenValidationParameters _tokenValidationParameters;
         public IdentityService(UserManager<ItForumUser> userManager,
-            IConfiguration configuration, IEmailService emailService, IAuthDbContext authContext, TokenValidationParameters tokenValidationParameters)
+            IConfiguration configuration, IEmailService emailService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _emailService = emailService;
-            _authContext = authContext;
-            _tokenValidationParameters = tokenValidationParameters;
         }
-        public async Task<TokenVm> CreateUser(BaseUserInfoModel userInfo, string password)
+        public async Task<JwtSecurityToken> CreateUser(BaseUserInfoModel userInfo, string password)
         {
             var user = await CreateDefaultUser(userInfo, password);
 
@@ -42,10 +35,10 @@ namespace ITForum.Application.Services.IdentityService
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            return await CreateJwtTokenAsync(user.UserName, user.Email, user.Id.ToString(), claims);
+            return CreateJwtToken(user.UserName, user.Email, user.Id.ToString(), claims);
         }
 
-        public async Task<TokenVm> CreateUserWithProvider(UserLoginInfo providerInfo, BaseUserInfoModel userInfo)
+        public async Task<JwtSecurityToken> CreateUserWithProvider(UserLoginInfo providerInfo, BaseUserInfoModel userInfo)
         {
             var user = await CreateDefaultUser(userInfo);
             IdentityResult result = await _userManager.AddLoginAsync(user, providerInfo);
@@ -56,9 +49,9 @@ namespace ITForum.Application.Services.IdentityService
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            return await CreateJwtTokenAsync(user.UserName, user.Email, user.Id.ToString(), claims);
+            return CreateJwtToken(user.UserName, user.Email, user.Id.ToString(), claims);
         }
-        public async Task<TokenVm> Login(BaseUserInfoModel userInfo, string password)
+        public async Task<JwtSecurityToken> Login(BaseUserInfoModel userInfo, string password)
         {
             var user = await _userManager.FindByNameAsync(userInfo.UserName);
             user ??= await _userManager.FindByEmailAsync(userInfo.Email);
@@ -71,9 +64,9 @@ namespace ITForum.Application.Services.IdentityService
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            return await CreateJwtTokenAsync(user.UserName, user.Email, user.Id.ToString(), claims);
+            return CreateJwtToken(user.UserName, user.Email, user.Id.ToString(), claims);
         }
-        public async Task<TokenVm> Login(string loginProvider, string providerKey)
+        public async Task<JwtSecurityToken> Login(string loginProvider, string providerKey)
         {
             var user = await _userManager.FindByLoginAsync(loginProvider, providerKey);
             if (user == null) throw new AuthenticationError(new[] { "User is not exist" });
@@ -83,7 +76,7 @@ namespace ITForum.Application.Services.IdentityService
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            return await CreateJwtTokenAsync(user.UserName, user.Email, user.Id.ToString(), claims);
+            return CreateJwtToken(user.UserName, user.Email, user.Id.ToString(), claims);
         }
         private async Task<ItForumUser> CreateDefaultUser(BaseUserInfoModel userInfo, string? password = null)
         {
@@ -128,7 +121,7 @@ namespace ITForum.Application.Services.IdentityService
             var result = await _userManager.ResetPasswordAsync(user, token, password);
             if (!result.Succeeded) throw new AuthenticationError(result.Errors);
         }
-        private async Task<TokenVm> CreateJwtTokenAsync(string username, string email, string id, IEnumerable<Claim>? additional_claims = null)
+        private JwtSecurityToken CreateJwtToken(string username, string email, string id, IEnumerable<Claim>? additional_claims = null)
         {
             var claims = new List<Claim>()
             {
@@ -144,63 +137,13 @@ namespace ITForum.Application.Services.IdentityService
                     issuer: _configuration["AuthOptions:Issuer"],
                     audience: _configuration["AuthOptions:Audience"],
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.Parse(_configuration["AuthOptions:AccessTokenLifeTime"])),
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromDays(7)),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(_configuration["AuthOptions:Key"])),
                         SecurityAlgorithms.HmacSha256)
                     );
-            var refreshToken = new RefreshToken
-            {
-                Token = Guid.NewGuid(),
-                ExpiresDate = DateTime.UtcNow.Add(TimeSpan.Parse(_configuration["AuthOptions:RefreshTokenLifeTime"])),
-                UserId = Guid.Parse(id)
-            };
-            _authContext.RefreshTokens.RemoveRange(_authContext.RefreshTokens.Where(rToken => rToken.UserId == refreshToken.UserId));
-            await _authContext.RefreshTokens.AddAsync(refreshToken);
-            await _authContext.SaveChangesAsync();
-            return new TokenVm { AccessToken = new JwtSecurityTokenHandler().WriteToken(jwt), RefreshToken = refreshToken.Token, Expiration = jwt.ValidTo };
-        }
 
-        public async Task<TokenVm> RefreshToken(Guid refreshToken, string accessToken)
-        {
-            var principal = GetPrincipal(accessToken);
-
-            if (principal == null) throw new AuthenticationError(new[] { "Invalid token" });
-            var UserId = principal.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value;
-            var user = await _userManager.FindByIdAsync(UserId);
-            var storedRefreshToken = await _authContext.RefreshTokens.FirstOrDefaultAsync(token => token.Token == refreshToken);
-            if (storedRefreshToken == null) throw new AuthenticationError(new[] { "Invalid token" });
-            if (storedRefreshToken.UserId != user.Id) throw new AuthenticationError(new[] { "Invalid token" });
-            if (storedRefreshToken.ExpiresDate < DateTime.UtcNow) throw new AuthenticationError(new[] { "Token expired" });
-            await _authContext.SaveChangesAsync();
-
-            //generate new token
-            var claims = new List<Claim>();
-            var userRoles = await _userManager.GetRolesAsync(user);
-            foreach (var role in userRoles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            return await CreateJwtTokenAsync(user.UserName, user.Email, user.Id.ToString(), claims);
-        }
-        private ClaimsPrincipal? GetPrincipal(string accessToken)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                var tokenValidationParameters = _tokenValidationParameters.Clone();
-                tokenValidationParameters.ValidateLifetime = false;
-                var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var validatedToken);
-                if (!IsJwtWithValidSecurityAlgorithm(validatedToken)) return null;
-                return principal;
-            }
-            catch { return null; }
-        }
-        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
-        {
-            return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
-                   jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                       StringComparison.InvariantCultureIgnoreCase);
+            return jwt;
         }
     }
 }

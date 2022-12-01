@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ITForum.Domain.ItForumUser;
-using ITForum.Application.Interfaces;
 
 namespace ITForum.Persistance
 {
-    public class AuthDbContext: IdentityDbContext<ItForumUser, ItForumRole, Guid>, IAuthDbContext
+    public class AuthDbContext: IdentityDbContext<ItForumUser, ItForumRole, Guid>
     {
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
             Database.EnsureCreated();

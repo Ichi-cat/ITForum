@@ -1,8 +1,8 @@
 ﻿using ITForum.Api.Models;
 using ITForum.Api.Models.Auth;
+using ITForum.Api.ViewModels;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Common.Exceptions.Generals;
-using ITForum.Application.Common.ViewModels;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Services.IdentityService;
 using ITForum.Domain.ItForumUser;
@@ -54,7 +54,11 @@ namespace ITForum.Api.Controllers
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
             var token = await _identityService.Login(new BaseUserInfoModel { UserName = model.UserName, Email = model.UserName }, model.Password);
-            return Ok(token);
+            return Ok(new TokenVm
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
+            });
         }
         /// <summary>
         /// Registration action
@@ -82,13 +86,11 @@ namespace ITForum.Api.Controllers
 
             var token = await _identityService.CreateUser(
                 new() { UserName = model.UserName, Email = model.Email }, model.Password);
-            return Ok(token);
-        }
-        [HttpPost]
-        public async Task<ActionResult<TokenVm>> RefreshToken([FromBody]RefreshTokenModel model)
-        {
-            var token = await _identityService.RefreshToken(model.RefreshToken, model.AccessToken);
-            return Ok(token);
+            return Ok(new TokenVm
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
+            });
         }
         [HttpPost("facebook")]
         public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token, [FromBody] SignInWithProviderModel model)
@@ -117,15 +119,23 @@ namespace ITForum.Api.Controllers
                 {
                     baseUserInfo.UserName = model.UserName;
                 }
-                var tokenVm = await _identityService.CreateUserWithProvider(
+                JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
                     new("Facebook", userInformation.Id, "Facebook"),
                     baseUserInfo);
-                return Ok(tokenVm);
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
             }
             else
             {
-                var tokenVm = await _identityService.Login("Facebook", userInformation.Id);
-                return Ok(tokenVm);
+                JwtSecurityToken jwtToken = await _identityService.Login("Facebook", userInformation.Id);
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
             }
         }
 
@@ -154,15 +164,23 @@ namespace ITForum.Api.Controllers
                 {
                     baseUserInfo.UserName = model.UserName;
                 }
-                var tokenVm = await _identityService.CreateUserWithProvider(
+                JwtSecurityToken jwtToken = await _identityService.CreateUserWithProvider(
                     new("GitHub", userInformation.Id.ToString(), "GitHub"),
                     baseUserInfo);
-                return Ok(tokenVm);
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
             }
             else
             {
-                var tokenVm = await _identityService.Login("GitHub", userInformation.Id.ToString());
-                return Ok(tokenVm);
+                JwtSecurityToken jwtToken = await _identityService.Login("GitHub", userInformation.Id.ToString());
+                return Ok(new TokenVm
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Expiration = jwtToken.ValidTo
+                });
             }
         }
         [HttpPost]
