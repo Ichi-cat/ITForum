@@ -68,7 +68,7 @@ namespace ITForum.Api.Controllers
                 id = UserId;
             }
             if (id == null) throw new AuthenticationError(new[] { "User not found" });
-            var query = new GetFullUserInfoQuery { UserId = UserId };
+            var query = new GetFullUserInfoQuery { UserId = id.Value };
             var userInfo = await Mediator.Send(query);
             return Ok(userInfo);
         }
