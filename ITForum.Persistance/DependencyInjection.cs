@@ -18,7 +18,7 @@ namespace ITForum.Persistance
                 options.UseSqlite(connectingString);
                 options.EnableSensitiveDataLogging();
             });
-            services.AddDbContext<AuthDbContext>(options =>
+            services.AddDbContext<IAuthDbContext, AuthDbContext>(options =>
             {
                 options.UseSqlite(authConnectionString);
                 options.EnableSensitiveDataLogging();
