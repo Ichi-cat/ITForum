@@ -40,7 +40,6 @@
 
   <ItemGroup>
     <Folder Include="UploadedFiles\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
