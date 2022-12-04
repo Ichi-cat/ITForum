@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/ITForum/ITForum.db
+/ITForum/ITForum.db-shm
+/ITForum/ITForum.db-wal
+
+/ITForum/ItForumAuth.db
+/ITForum/ItForumAuth.db-shm
+/ITForum/ItForumAuth.db-wal

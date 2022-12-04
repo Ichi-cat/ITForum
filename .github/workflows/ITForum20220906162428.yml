@@ -3,6 +3,11 @@ on:
   push:
     branches:
     - master
+    - developing
+  pull_request:
+    branches:
+    - master
+    - developing
 env:
   AZURE_WEBAPP_NAME: ITForum20220906162428
   AZURE_WEBAPP_PACKAGE_PATH: ITForum/published
@@ -23,4 +28,4 @@ jobs:
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test .
