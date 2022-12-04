@@ -9,13 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UploadedFiles\NewFolder\**" />
     <Compile Remove="wwwroot\**" />
-    <Content Remove="UploadedFiles\NewFolder\**" />
     <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="UploadedFiles\NewFolder\**" />
     <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="UploadedFiles\NewFolder\**" />
     <None Remove="wwwroot\**" />
   </ItemGroup>
 
@@ -39,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UploadedFiles\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
