@@ -128,6 +128,26 @@ namespace ITForum.Application.Services.IdentityService
             var result = await _userManager.ResetPasswordAsync(user, token, password);
             if (!result.Succeeded) throw new AuthenticationError(result.Errors);
         }
+        public async Task ChangePassword(Guid userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var hasPassword = await _userManager.HasPasswordAsync(user);
+            if (!hasPassword) 
+            { 
+                await _userManager.AddPasswordAsync(user, newPassword);
+            }
+            else
+            {
+                if (user == null) throw new AuthenticationError(new[] { "User is not found" });
+                await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            }
+        }
+        public async Task ChangeEmail(string email, Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null) throw new AuthenticationError(new[] { "User is not found" });
+            await _userManager.SetEmailAsync(user, email);
+        }
         private async Task<TokenVm> CreateJwtTokenAsync(string username, string email, string id, IEnumerable<Claim>? additional_claims = null)
         {
             var claims = new List<Claim>()

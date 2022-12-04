@@ -14,5 +14,7 @@ namespace ITForum.Application.Interfaces
         Task<TokenVm> RefreshToken(Guid refreshToken, string accessToken);
         Task SendToken(string email, Uri redirectUri);
         Task ResetPassword(string token, string email, string password);
+        Task ChangePassword(Guid userId, string oldPassword, string newPassword);
+        Task ChangeEmail(string email, Guid userId);
     }
 }
