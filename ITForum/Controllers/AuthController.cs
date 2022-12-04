@@ -184,7 +184,13 @@ namespace ITForum.Api.Controllers
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
-            await _identityService.ChangePassword(UserId, "", model.NewPassword);
+            await _identityService.ChangePassword(UserId, model.OldPassword, model.NewPassword);
+            return NoContent();
+        }
+        [HttpPut]
+        public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
+        {
+            await _identityService.ChangeEmail(model.Email, UserId);
             return NoContent();
         }
     }

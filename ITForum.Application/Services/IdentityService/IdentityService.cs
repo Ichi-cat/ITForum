@@ -142,6 +142,12 @@ namespace ITForum.Application.Services.IdentityService
                 await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
             }
         }
+        public async Task ChangeEmail(string email, Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null) throw new AuthenticationError(new[] { "User is not found" });
+            await _userManager.SetEmailAsync(user, email);
+        }
         private async Task<TokenVm> CreateJwtTokenAsync(string username, string email, string id, IEnumerable<Claim>? additional_claims = null)
         {
             var claims = new List<Claim>()
