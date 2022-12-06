@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITForum.Application.Tags.Queries.GetTags
+namespace ITForum.Application.Tags.TagsViewModel
 {
     public class TagListVM
     {

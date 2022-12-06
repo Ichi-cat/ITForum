@@ -9,7 +9,6 @@ namespace ITForum.Application.Marks.Queries.GetTopicLikesCountQuery
 {
     public class GetTopicLikesCountQuery : IRequest<int>
     {
-        public Guid UserId { get; set; }
         public Guid TopicId { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITForum.Application.Common.Exceptions;
 using ITForum.Application.Interfaces;
+using ITForum.Application.Tags.Queries.GetTopicTags;
 using ITForum.Domain.Enums;
 using ITForum.Domain.TopicItems;
 using MediatR;
@@ -12,10 +13,12 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
     {
         private readonly IItForumDbContext _context;
         private readonly IMapper _mapper;
-        public GetTopicDetailsByIdQueryHandler(IItForumDbContext context, IMapper mapper)
+        private readonly IMediator _mediator;
+        public GetTopicDetailsByIdQueryHandler(IItForumDbContext context, IMapper mapper, IMediator mediator)
         {
             _context = context;
             _mapper = mapper;
+            _mediator = mediator;
         }
         public async Task<TopicDetailsVm> Handle(GetTopicDetailsByIdQuery request, CancellationToken cancellationToken)
         {
@@ -30,6 +33,8 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
 
             topicDetails.LikeCount = CountLikes;
             topicDetails.DislikeCount = CountDislikes;
+
+            topicDetails.Tags = await _mediator.Send(new GetTopicTagsQuery { TopicId = request.Id });
 
             return topicDetails;
         }

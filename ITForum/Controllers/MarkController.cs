@@ -54,7 +54,7 @@ namespace ITForum.Api.Controllers
         [HttpGet("{topicId}")]
         public async Task<ActionResult> GetTopicLikes(Guid topicId)
         {
-            var result = await Mediator.Send(new GetTopicLikesCountQuery { UserId = UserId, TopicId = topicId });
+            var result = await Mediator.Send(new GetTopicLikesCountQuery {TopicId = topicId });
             return Ok(result);
         }
         /// <summary>

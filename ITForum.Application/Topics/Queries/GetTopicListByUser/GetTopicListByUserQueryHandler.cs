@@ -6,7 +6,7 @@ using ITForum.Application.Common.Extensions;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
 
-namespace ITForum.Application.Topics.Queries.GetMyTopicList
+namespace ITForum.Application.Topics.Queries.GetTopicListByUser
 {
     public class GetTopicListByUserQueryHandler : IRequestHandler<GetTopicListByUserQuery, TopicListVm>
     {

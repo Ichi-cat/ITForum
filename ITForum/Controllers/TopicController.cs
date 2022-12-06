@@ -13,7 +13,7 @@ using ITForum.Application.Topics.Queries.GetTopicList;
 using ITForum.Application.Topics.TopicViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ITForum.Application.Topics.Queries.GetTopicsBySubscriptions;
-using ITForum.Application.Topics.Queries.GetMyTopicList;
+using ITForum.Application.Topics.Queries.GetTopicListByUser;
 
 namespace ITForum.Api.Controllers
 {
@@ -48,7 +48,7 @@ namespace ITForum.Api.Controllers
             return Ok(topics);
         }
         /// <summary>
-        /// Get topic by id
+        /// Get topic details by id
         /// </summary>
         /// /// <remarks>
         /// Sample request:
