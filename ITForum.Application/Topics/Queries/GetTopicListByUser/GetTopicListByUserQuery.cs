@@ -2,7 +2,7 @@
 using ITForum.Application.Topics.TopicViewModels;
 using ITForum.Domain.Enums;
 
-namespace ITForum.Application.Topics.Queries.GetMyTopicList
+namespace ITForum.Application.Topics.Queries.GetTopicListByUser
 {
     public class GetTopicListByUserQuery : IRequest<TopicListVm>
     {

@@ -1,6 +1,6 @@
-﻿using ITForum.Domain.Enums;
+﻿using ITForum.Application.Tags.TagsViewModel;
+using ITForum.Domain.Enums;
 using MediatR;
-using System.Text;
 
 namespace ITForum.Application.Tags.Queries.GetTags
 {

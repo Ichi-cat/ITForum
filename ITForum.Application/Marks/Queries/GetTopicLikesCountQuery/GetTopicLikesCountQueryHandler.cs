@@ -14,8 +14,7 @@ namespace ITForum.Application.Marks.Queries.GetTopicLikesCountQuery
         }
         public async Task<int> Handle(GetTopicLikesCountQuery request, CancellationToken cancellationToken)
         {
-            // TODO: не правильно работает
-            var marks = await _context.Marks.Where(m => m.UserId == request.UserId && m.IsLiked == MarkType.LIKE).CountAsync();
+            var marks = await _context.Marks.Where(m => m.TopicId == request.TopicId && m.IsLiked == MarkType.LIKE).CountAsync();
             return marks;
         }
     }

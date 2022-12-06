@@ -2,9 +2,9 @@
 using AutoMapper.QueryableExtensions;
 using ITForum.Application.Common.Extensions;
 using ITForum.Application.Interfaces;
+using ITForum.Application.Tags.TagsViewModel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace ITForum.Application.Tags.Queries.GetTags
 {

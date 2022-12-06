@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ITForum.Application.Topics.Queries.GetMyTopicList
+namespace ITForum.Application.Topics.Queries.GetTopicListByUser
 {
     public class GetTopicListByUserQueryValidator : AbstractValidator<GetTopicListByUserQuery>
     {
