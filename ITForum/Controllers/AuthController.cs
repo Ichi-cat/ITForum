@@ -14,7 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace ITForum.Api.Controllers
 {
     [Route("[controller]/[action]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly UserManager<ItForumUser> _userManager;
         private readonly IFacebookAuthentication _facebookAuthentication;
@@ -178,6 +178,19 @@ namespace ITForum.Api.Controllers
         {
             if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
             await _identityService.ResetPassword(model.Token, model.Email, model.Password);
+            return NoContent();
+        }
+        [HttpPut]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            if (!ModelState.IsValid) throw new AuthenticationError(ModelState.Values.SelectMany(v => v.Errors));
+            await _identityService.ChangePassword(UserId, model.OldPassword, model.NewPassword);
+            return NoContent();
+        }
+        [HttpPut]
+        public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
+        {
+            await _identityService.ChangeEmail(model.Email, UserId);
             return NoContent();
         }
     }
