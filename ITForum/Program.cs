@@ -17,6 +17,9 @@ using ITForum.Api.Additional;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
 using Microsoft.AspNetCore.Mvc;
+using ITForum.Api.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using ITForum.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,6 +108,11 @@ builder.Services.AddMailKit(optionBuilder =>
         Security = builder.Configuration.GetValue<bool>("Smtp:EnableSsl")
     });
 });
+builder.Services.AddSignalR(opt =>
+{
+    opt.EnableDetailedErrors = true;
+});
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -134,15 +142,31 @@ builder.Services.AddAuthentication(options =>
     options.SaveToken = false;
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = tokenValidationParameters;
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+            {
+                
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
+        policy.AllowAnyMethod()
+           .AllowAnyHeader()
+           .SetIsOriginAllowed(origin => true)
+           .AllowCredentials();
     });
 });
 
@@ -197,6 +221,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<ChatHub>("/chat", options =>
+{
+});
 app.MapDefaultControllerRoute();
 //app.MapFallbackToController("Error_404", "error");
 
