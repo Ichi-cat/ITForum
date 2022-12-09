@@ -5,9 +5,11 @@ using ITForum.Application.Comments.Commands.DeleteComment;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ITForum.Application.Common.Exceptions.Generals;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize]
     public class CommentController : BaseController
     {
         /// <summary>

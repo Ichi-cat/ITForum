@@ -1,12 +1,9 @@
 ﻿using ITForum.Api.Models;
-using ITForum.Application.Common.Exceptions.Generals;
-using ITForum.Application.Tags.Commands.CreateTag;
 using ITForum.Application.Tags.Queries.GetTags;
 using ITForum.Application.Tags.TagsViewModel;
 using ITForum.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace ITForum.Api.Controllers
 {
