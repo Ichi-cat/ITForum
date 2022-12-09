@@ -28,10 +28,15 @@ namespace ITForum.Api.Middleware
         private Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger<CustomExceptionHandlerMiddleware> logger)
         {
             var result = String.Empty;
+            //testc code
             var code = HttpStatusCode.InternalServerError;
             
             switch (exception)
             {
+                case UnauthorizeException unauthorizeException:
+                    code = HttpStatusCode.Unauthorized;
+                    result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, unauthorizeException.Message));
+                    break;
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, validationException));
@@ -41,7 +46,7 @@ namespace ITForum.Api.Middleware
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, notFoundException.Message));
                     break;
                 case AuthenticationError authenticationError:
-                    code = HttpStatusCode.Unauthorized;
+                    code = HttpStatusCode.BadRequest;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, authenticationError));
                     break;
                 case UploadFileException uploadFileException:
@@ -53,7 +58,6 @@ namespace ITForum.Api.Middleware
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, modelValidationException));
                     break;
                 default:
-                    code = HttpStatusCode.InternalServerError;
                     result = JsonSerializer.Serialize<GeneralExceptionVm>(new GeneralExceptionVm((int)code, "Internal server error"));
                     logger.LogError(exception.Message);
                     break;
