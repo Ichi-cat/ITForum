@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize]
     public class UserController : BaseController
     {
         [AllowAnonymous]
@@ -50,7 +51,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetShortUserInfoQuery { UserId = UserId };
             var userInfo = await Mediator.Send(query);
             return Ok(userInfo);
@@ -67,7 +68,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetFullUserInfoQuery { UserId = id.Value };
             var userInfo = await Mediator.Send(query);
             return Ok(userInfo);

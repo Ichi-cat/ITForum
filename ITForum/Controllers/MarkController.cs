@@ -5,9 +5,11 @@ using ITForum.Application.Common.Exceptions.Generals;
 using ITForum.Application.Marks.Commands.SetMark;
 using ITForum.Application.Marks.Queries.GetTopicLikesCountQuery;
 using ITForum.Application.Topics.Queries.GetLikedTopics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize]
     public class MarkController : BaseController
     {
         /// <summary>
@@ -51,6 +53,7 @@ namespace ITForum.Api.Controllers
         /// ///</remarks>
         /// <param name="topicId"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("{topicId}")]
         public async Task<ActionResult> GetTopicLikes(Guid topicId)
         {

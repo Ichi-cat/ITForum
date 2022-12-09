@@ -14,6 +14,7 @@ using ITForum.Application.Topics.TopicViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ITForum.Application.Topics.Queries.GetTopicsBySubscriptions;
 using ITForum.Application.Topics.Queries.GetTopicListByUser;
+using ITForum.Application.Common.Exceptions;
 
 namespace ITForum.Api.Controllers
 {
@@ -204,6 +205,10 @@ namespace ITForum.Api.Controllers
             if (query.UserId == null && UserId != Guid.Empty)
             {
                 query.UserId = UserId;
+            }
+            if (query.UserId == null)
+            {
+                throw new UnauthorizeException();
             }
             var topics = await Mediator.Send(query);
             return Ok(topics);

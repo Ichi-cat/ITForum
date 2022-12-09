@@ -6,6 +6,7 @@ using ITForum.Application.Common.ViewModels;
 using ITForum.Application.Interfaces;
 using ITForum.Application.Services.IdentityService;
 using ITForum.Domain.ItForumUser;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -180,6 +181,7 @@ namespace ITForum.Api.Controllers
             await _identityService.ResetPassword(model.Token, model.Email, model.Password);
             return NoContent();
         }
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
@@ -187,6 +189,7 @@ namespace ITForum.Api.Controllers
             await _identityService.ChangePassword(UserId, model.OldPassword, model.NewPassword);
             return NoContent();
         }
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
         {
