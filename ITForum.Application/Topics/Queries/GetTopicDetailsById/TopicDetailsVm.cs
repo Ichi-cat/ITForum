@@ -14,6 +14,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
         public List<string>? Tags { get; set; }
         public int LikeCount { get; set; }
         public int DislikeCount { get; set; }
+        public bool? IsLiked { get; set; } = null;
 
         public void Mapping(Profile profile)
         {
