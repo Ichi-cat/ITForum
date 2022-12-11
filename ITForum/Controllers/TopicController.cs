@@ -67,7 +67,7 @@ namespace ITForum.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
-            var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { Id = id });
+            var topic = await Mediator.Send(new GetTopicDetailsByIdQuery { Id = id , UserId = UserId});
             return Ok(topic);
         }
         //todo: cencrete topiclist
