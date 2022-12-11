@@ -19,7 +19,7 @@ namespace ITForum.Application.Users.Queries.GetFullUserInfo
         public async Task<FullUserInfoVm> Handle(GetFullUserInfoQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-            if (user == null) throw new AuthenticationError(new[] { "User not found" });
+            if (user == null) throw new UnauthorizeException();
             return _mapper.Map<FullUserInfoVm>(user);
         }
     }

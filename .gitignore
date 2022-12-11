@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /ITForum/ItForumAuth.db
 /ITForum/ItForumAuth.db-shm
 /ITForum/ItForumAuth.db-wal
+/ITForum/UploadedFiles/*

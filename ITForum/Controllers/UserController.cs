@@ -59,7 +59,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetShortUserInfoQuery { UserId = UserId };
             var claims = User.FindAll(identity => identity.Type == ClaimTypes.Role);
             var userInfo = await Mediator.Send(query);
@@ -77,7 +77,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetFullUserInfoQuery { UserId = id.Value };
             var userInfo = await Mediator.Send(query);
             return Ok(userInfo);

@@ -185,7 +185,8 @@ namespace ITForum.Api.Controllers
             await _identityService.ResetPassword(model.Token, model.Email, model.Password);
             return NoContent();
         }
-        [AllowAnonymous]
+
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
@@ -193,7 +194,8 @@ namespace ITForum.Api.Controllers
             await _identityService.ChangePassword(UserId, model.OldPassword, model.NewPassword);
             return NoContent();
         }
-        [AllowAnonymous]
+
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
         {
