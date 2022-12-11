@@ -15,7 +15,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
         public int LikeCount { get; set; }
         public int DislikeCount { get; set; }
         public bool? IsLiked { get; set; } = null;
-
+        public bool? IsDisliked { get; set; } = null;
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Topic, TopicDetailsVm>();

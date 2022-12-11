@@ -34,7 +34,7 @@ namespace ITForum.Application.Topics.Queries.GetTopicDetailsById
             topicDetails.LikeCount = CountLikes;
             topicDetails.DislikeCount = CountDislikes;
             topicDetails.IsLiked = await _context.Marks.AnyAsync(mark => mark.TopicId == request.Id && mark.UserId == request.UserId && mark.IsLiked == MarkType.LIKE);
-
+            topicDetails.IsDisliked = await _context.Marks.AnyAsync(mark => mark.TopicId == request.Id && mark.UserId == request.UserId && mark.IsLiked == MarkType.DISLIKE);
             topicDetails.Tags = await _mediator.Send(new GetTopicTagsQuery { TopicId = request.Id });
 
             return topicDetails;
