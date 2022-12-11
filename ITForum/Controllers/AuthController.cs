@@ -14,7 +14,6 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace ITForum.Api.Controllers
 {
-    [Authorize]
     [Route("[controller]/[action]")]
     public class AuthController : BaseController
     {
