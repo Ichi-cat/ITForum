@@ -1,6 +1,8 @@
 ﻿using ITForum.Api.enums;
 using ITForum.Api.Models;
 using ITForum.Application.Common.Exceptions;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Users.Commands.DeleteUser;
 using ITForum.Application.Users.Commands.SubscribeOnUser;
 using ITForum.Application.Users.Commands.UnsubscribeFromUser;
 using ITForum.Application.Users.Commands.UpdateUserInfo;
@@ -13,9 +15,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize(Policy = "RequireUserRole")]
     public class UserController : BaseController
     {
-        [AllowAnonymous]
+        private readonly IIdentityService _identityService;
+
+        public UserController(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
         {
@@ -42,7 +51,6 @@ namespace ITForum.Api.Controllers
         /// Get user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("info/{id?}")]
         public async Task<ActionResult<ShortUserInfoVm>> GetShortUserInfo(Guid? id)
         {
@@ -59,7 +67,6 @@ namespace ITForum.Api.Controllers
         /// Get full user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("FullInfo/{id?}")]
         public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo([FromRoute]Guid? id)
         {
@@ -92,6 +99,30 @@ namespace ITForum.Api.Controllers
             var path = await Mediator.Send(command);
 
             return Ok(path);
+        }
+        /// <summary>
+        /// Delete user by Id
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(Guid UserId)
+        {
+            var command = new DeleteUserCommand() { UserId = UserId };
+            await Mediator.Send(command);
+            return NoContent();
+        }
+        /// <summary>
+        /// Ban user by name
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [HttpPut("BanUser")]
+        public async Task<ActionResult> BanUserByName(string userName)
+        {
+            await _identityService.BanUserByName(userName);
+            return NoContent();
         }
     }
 }

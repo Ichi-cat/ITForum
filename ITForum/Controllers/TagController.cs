@@ -17,7 +17,6 @@ namespace ITForum.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult<TagListVM>> GetTags([FromQuery] PaginationModel pagination, TagSort sort)
         {
            var tags = await Mediator.Send(new GetTagsListQuery { Page = pagination.Page , PageSize = pagination.PageSize, Sort=sort});
