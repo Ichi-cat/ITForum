@@ -1,6 +1,8 @@
 ﻿using ITForum.Api.enums;
 using ITForum.Api.Models;
 using ITForum.Application.Common.Exceptions;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Users.Commands.DeleteUser;
 using ITForum.Application.Users.Commands.SubscribeOnUser;
 using ITForum.Application.Users.Commands.UnsubscribeFromUser;
 using ITForum.Application.Users.Commands.UpdateUserInfo;
@@ -10,13 +12,20 @@ using ITForum.Application.Users.Queries.GetShortUserInfo;
 using ITForum.Application.Users.Queries.GetUserList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ITForum.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "RequireUserRole")]
     public class UserController : BaseController
     {
-        [AllowAnonymous]
+        private readonly IIdentityService _identityService;
+
+        public UserController(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
         {
@@ -40,10 +49,9 @@ namespace ITForum.Api.Controllers
             return NoContent();
         }
         /// <summary>
-        /// Get user info
+        /// Get short user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("info/{id?}")]
         public async Task<ActionResult<ShortUserInfoVm>> GetShortUserInfo(Guid? id)
         {
@@ -53,14 +61,15 @@ namespace ITForum.Api.Controllers
             }
             if (id == null) throw new UnauthorizeException();
             var query = new GetShortUserInfoQuery { UserId = UserId };
+            var claims = User.FindAll(identity => identity.Type == ClaimTypes.Role);
             var userInfo = await Mediator.Send(query);
+            userInfo.Roles = claims.Select(x => x.Value).ToList();
             return Ok(userInfo);
         }
         /// <summary>
         /// Get full user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("FullInfo/{id?}")]
         public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo([FromRoute]Guid? id)
         {
@@ -93,6 +102,31 @@ namespace ITForum.Api.Controllers
             var path = await Mediator.Send(command);
 
             return Ok(path);
+        }
+        /// <summary>
+        /// Delete user by Id
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(Guid UserId)
+        {
+            var command = new DeleteUserCommand() { UserId = UserId };
+            await Mediator.Send(command);
+            return NoContent();
+        }
+        /// <summary>
+        /// Ban user by name
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpPut("BanUser")]
+        public async Task<ActionResult> BanUserByName([FromQuery]string userName)
+        {
+            await _identityService.BanUserByName(userName);
+            return NoContent();
         }
     }
 }

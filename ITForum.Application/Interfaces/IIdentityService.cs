@@ -16,5 +16,6 @@ namespace ITForum.Application.Interfaces
         Task ResetPassword(string token, string email, string password);
         Task ChangePassword(Guid userId, string oldPassword, string newPassword);
         Task ChangeEmail(string email, Guid userId);
+        Task BanUserByName(string userName);
     }
 }

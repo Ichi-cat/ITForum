@@ -17,6 +17,7 @@ using ITForum.Api.Additional;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -134,6 +135,25 @@ builder.Services.AddAuthentication(options =>
     options.SaveToken = false;
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = tokenValidationParameters;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", builder =>
+    {
+        builder.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, UserRoles.Admin));
+    });
+    options.AddPolicy("RequireUserRole", builder =>
+    {
+        builder.RequireAssertion(x => (x.User.HasClaim(ClaimTypes.Role, UserRoles.User)
+                                   || x.User.HasClaim(ClaimTypes.Role, UserRoles.Admin))
+                                   && x.User.HasClaim(ClaimTypes.Role, UserRoles.Blocked) == false);
+    });
+});
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Lockout.AllowedForNewUsers = false;
 });
 
 builder.Services.AddCors(options =>

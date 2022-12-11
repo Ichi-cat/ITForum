@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
     public class AuthController : BaseController
     {
@@ -50,6 +51,7 @@ namespace ITForum.Api.Controllers
         /// <returns>Returns TokenVm</returns>
         [SwaggerResponse(200)]
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignIn([FromBody] SignInModel model)
         {
@@ -76,6 +78,7 @@ namespace ITForum.Api.Controllers
         /// <returns>Returns TokenVm</returns>
         [SwaggerResponse(200)]
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<TokenVm>> SignUp([FromBody] SignUpModel model)
         {
@@ -91,6 +94,7 @@ namespace ITForum.Api.Controllers
             var token = await _identityService.RefreshToken(model.RefreshToken, model.AccessToken);
             return Ok(token);
         }
+        [AllowAnonymous]
         [HttpPost("facebook")]
         public async Task<ActionResult<TokenVm>> SignInFacebookAsync(string token, [FromBody] SignInWithProviderModel model)
         {
@@ -129,7 +133,7 @@ namespace ITForum.Api.Controllers
                 return Ok(tokenVm);
             }
         }
-
+        [AllowAnonymous]
         [HttpPost("github")]
         public async Task<ActionResult<TokenVm>> SignInGitHubAsync(string code, [FromBody] SignInWithProviderModel model)
         {
@@ -181,6 +185,7 @@ namespace ITForum.Api.Controllers
             await _identityService.ResetPassword(model.Token, model.Email, model.Password);
             return NoContent();
         }
+
         [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
@@ -189,6 +194,7 @@ namespace ITForum.Api.Controllers
             await _identityService.ChangePassword(UserId, model.OldPassword, model.NewPassword);
             return NoContent();
         }
+
         [Authorize]
         [HttpPut]
         public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
