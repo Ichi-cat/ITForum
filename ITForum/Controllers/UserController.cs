@@ -10,6 +10,7 @@ using ITForum.Application.Users.Queries.GetShortUserInfo;
 using ITForum.Application.Users.Queries.GetUserList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ITForum.Api.Controllers
 {
@@ -39,7 +40,7 @@ namespace ITForum.Api.Controllers
             return NoContent();
         }
         /// <summary>
-        /// Get user info
+        /// Get short user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
         [AllowAnonymous]
@@ -52,7 +53,9 @@ namespace ITForum.Api.Controllers
             }
             if (id == null) throw new AuthenticationError(new[] { "User not found" });
             var query = new GetShortUserInfoQuery { UserId = UserId };
+            var claims = User.FindAll(identity => identity.Type == ClaimTypes.Role);
             var userInfo = await Mediator.Send(query);
+            userInfo.Roles = claims.Select(x => x.Value).ToList();
             return Ok(userInfo);
         }
         /// <summary>
@@ -93,5 +96,33 @@ namespace ITForum.Api.Controllers
 
             return Ok(path);
         }
+<<<<<<< Updated upstream
+=======
+        /// <summary>
+        /// Delete user by Id
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(Guid UserId)
+        {
+            var command = new DeleteUserCommand() { UserId = UserId };
+            await Mediator.Send(command);
+            return NoContent();
+        }
+        /// <summary>
+        /// Ban user by name
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpPut("BanUser")]
+        public async Task<ActionResult> BanUserByName([FromQuery]string userName)
+        {
+            await _identityService.BanUserByName(userName);
+            return NoContent();
+        }
+>>>>>>> Stashed changes
     }
 }
