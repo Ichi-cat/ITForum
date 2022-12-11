@@ -41,9 +41,9 @@ namespace ITForum.Persistance
                 };
                 var result = await userManager.CreateAsync(user, TestUser.password);
                 
-                if (await roleManager.RoleExistsAsync(UserRoles.User))
+                if (await roleManager.RoleExistsAsync(UserRoles.Admin))
                 {
-                    await userManager.AddToRoleAsync(user, UserRoles.User);
+                    await userManager.AddToRoleAsync(user, UserRoles.Admin);
                 }
             }
         }
@@ -56,7 +56,7 @@ namespace ITForum.Persistance
                 new Claim(JwtRegisteredClaimNames.Jti, TestUser.id.ToString())
             };
 
-            var userRoles = new List<string>{ UserRoles.User };
+            var userRoles = new List<string> { UserRoles.Admin };
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));

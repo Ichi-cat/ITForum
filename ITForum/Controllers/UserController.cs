@@ -1,6 +1,8 @@
 ﻿using ITForum.Api.enums;
 using ITForum.Api.Models;
 using ITForum.Application.Common.Exceptions;
+using ITForum.Application.Interfaces;
+using ITForum.Application.Users.Commands.DeleteUser;
 using ITForum.Application.Users.Commands.SubscribeOnUser;
 using ITForum.Application.Users.Commands.UnsubscribeFromUser;
 using ITForum.Application.Users.Commands.UpdateUserInfo;
@@ -14,9 +16,16 @@ using System.Security.Claims;
 
 namespace ITForum.Api.Controllers
 {
+    [Authorize(Policy = "RequireUserRole")]
     public class UserController : BaseController
     {
-        [AllowAnonymous]
+        private readonly IIdentityService _identityService;
+
+        public UserController(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetUserList(UsersSort sort, int page, int pageSize)
         {
@@ -43,7 +52,6 @@ namespace ITForum.Api.Controllers
         /// Get short user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("info/{id?}")]
         public async Task<ActionResult<ShortUserInfoVm>> GetShortUserInfo(Guid? id)
         {
@@ -51,7 +59,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetShortUserInfoQuery { UserId = UserId };
             var claims = User.FindAll(identity => identity.Type == ClaimTypes.Role);
             var userInfo = await Mediator.Send(query);
@@ -62,7 +70,6 @@ namespace ITForum.Api.Controllers
         /// Get full user info
         /// </summary>
         /// <returns>Returns UserVm</returns>
-        [AllowAnonymous]
         [HttpGet("FullInfo/{id?}")]
         public async Task<ActionResult<FullUserInfoVm>> GetFullUserInfo([FromRoute]Guid? id)
         {
@@ -70,7 +77,7 @@ namespace ITForum.Api.Controllers
             {
                 id = UserId;
             }
-            if (id == null) throw new AuthenticationError(new[] { "User not found" });
+            if (id == null) throw new UnauthorizeException();
             var query = new GetFullUserInfoQuery { UserId = id.Value };
             var userInfo = await Mediator.Send(query);
             return Ok(userInfo);
@@ -96,8 +103,6 @@ namespace ITForum.Api.Controllers
 
             return Ok(path);
         }
-<<<<<<< Updated upstream
-=======
         /// <summary>
         /// Delete user by Id
         /// </summary>
@@ -123,6 +128,5 @@ namespace ITForum.Api.Controllers
             await _identityService.BanUserByName(userName);
             return NoContent();
         }
->>>>>>> Stashed changes
     }
 }

@@ -14,6 +14,7 @@ using ITForum.Application.Topics.TopicViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ITForum.Application.Topics.Queries.GetTopicsBySubscriptions;
 using ITForum.Application.Topics.Queries.GetTopicListByUser;
+using ITForum.Application.Common.Exceptions;
 
 namespace ITForum.Api.Controllers
 {
@@ -40,7 +41,6 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(200, type: typeof(TopicListVm))]
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
-        [AllowAnonymous]
         [HttpGet("ByTag")]
         public async Task<ActionResult<TopicListVm>> GetTopicListByTag([FromQuery] ShowTopicsModel showTopicsModel, [FromQuery] PaginationModel pagination, string tagName)
         {
@@ -63,7 +63,6 @@ namespace ITForum.Api.Controllers
         [SwaggerResponse(400, type: typeof(GeneralExceptionVm))]
         [SwaggerResponse(401)]
         [SwaggerResponse(404, type: typeof(GeneralExceptionVm))]
-        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDetailsVm>> GetTopicDetailsById(Guid id)
         {
@@ -179,7 +178,6 @@ namespace ITForum.Api.Controllers
         /// </remarks>
         /// <param name="TypeOfSort"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TopicListVm>>> GetTopicList([FromQuery] ShowTopicsModel showTopicsModel, [FromQuery] PaginationModel pagination)
         {
@@ -204,6 +202,10 @@ namespace ITForum.Api.Controllers
             if (query.UserId == null && UserId != Guid.Empty)
             {
                 query.UserId = UserId;
+            }
+            if (query.UserId == null)
+            {
+                throw new UnauthorizeException();
             }
             var topics = await Mediator.Send(query);
             return Ok(topics);
